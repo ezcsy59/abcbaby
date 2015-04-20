@@ -1,0 +1,287 @@
+//
+//  SecondTabViewController.m
+//  shuoshuo3
+//
+//  Created by huang on 3/5/14.
+//  Copyright (c) 2014 huang. All rights reserved.
+//
+#define kDefaultToolbarHeight 42
+#define kIOS7 0
+
+#import "SecondTabViewController.h"
+#import "SeTableViewCell.h"
+#import "jianKangNetWork.h"
+#import "chengZhangViewController.h"
+#import "baoBaoBinLiViewController.h"
+#import "knowWebViewController.h"
+#import "yiMiaoViewController.h"
+#import "tijianjiluViewController.h"
+
+@interface SecondTabViewController ()
+@property(nonatomic,strong)EGORefreshTableHeaderView *_refreshHeaderView;
+@property(nonatomic,strong)PullTableView *_tableView;
+@property(nonatomic,strong)HJHMyImageView *mainImageView;
+@property(nonatomic,strong)NSArray *jianKangListArray;
+@end
+
+@implementation SecondTabViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self getData];
+    [self setMainImageView];
+    [self setMainTableView];
+    // Do any additional setup after loading the view.
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getJianKangListSuccess:) name:@"getJianKangListSuccess" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getJianKangListFail:) name:@"getJianKangListFail" object:nil];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+#pragma mark -logic data
+-(void)getData{
+    self.jianKangListArray = [NSArray array];
+    jianKangNetWork *jianKangNetWork1 = [[jianKangNetWork alloc]init];
+    [jianKangNetWork1 getJianKangListWithPageSize:@"20" page:@"0"];
+}
+
+-(void)getJianKangListSuccess:(NSNotification*)noti{
+    NSDictionary *dic = [noti object];
+    NSArray *array = [dic objectForKey:@"data"];
+    if (array.count > 0) {
+        self.jianKangListArray = array;
+    }
+    [self._tableView reloadData];
+}
+
+-(void)getJianKangListFail:(NSNotification*)noti{
+    
+}
+
+-(void)setMainTableView{
+    self._tableView = [[PullTableView alloc]init];
+    [self._tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    self._tableView.frame = CGRectMake(0, 0, ScreenWidth, 568 - 198 + 78);
+    
+    if (!iPhone5) {
+        self._tableView.frame = CGRectMake(0, -5, ScreenWidth, 568 - 198 + 78 - 88);
+    }
+    
+    ((PullTableView*)(self._tableView)).pullDelegate = self;
+    self._tableView.delegate = self;
+    self._tableView.dataSource = self;
+    self._tableView.tableHeaderView = self.mainImageView;
+    [self._tableView setContentSize:CGSizeMake(ScreenWidth, 568 - 198 + 95)];
+    [self.view addSubview:self._tableView];
+}
+
+-(void)setMainImageView{
+    self.mainImageView = [[HJHMyImageView alloc]init];
+    self.mainImageView.frame = CGRectMake(0, 0, ScreenWidth, 198 + 60);
+    self.mainImageView.image = [UIImage imageNamed:@"mybaby_top_bg.png"];
+    
+    for (int i = 0; i < 4; i++) {
+        HJHMyButton *btn = [[HJHMyButton alloc]init];
+        btn.frame = CGRectMake(i*80, 198, 80, 60);
+        btn.tag = i;
+        [btn addTarget:self action:@selector(fistViewBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [self.mainImageView addSubview:btn];
+        HJHMyLabel *label = [[HJHMyLabel alloc]init];
+        label.font = [UIFont systemFontOfSize:14];
+        label.frame = CGRectMake(0, 40, 80, 20);
+        label.textColor = [UIColor colorWithHexString:@"#666666"];
+        label.textAlignment = NSTextAlignmentCenter;
+        [btn addSubview:label];
+        btn.backgroundColor = [UIColor colorWithHexString:@"#F1F1F1"];
+        switch (i) {
+            case 0:
+            {
+                HJHMyImageView *btnImageView = [[HJHMyImageView alloc]init];
+                btnImageView.userInteractionEnabled = NO;
+                btnImageView.image = [UIImage imageNamed:@"children_helper_img.png"];
+                btnImageView.contentMode = UIViewContentModeScaleAspectFit;
+                btnImageView.frame = CGRectMake(20, 5, 40, 35);
+                [btn addSubview:btnImageView];
+                
+                label.text = @"生成记录";
+            }
+                break;
+            case 1:
+            {
+                HJHMyImageView *btnImageView = [[HJHMyImageView alloc]init];
+                btnImageView.userInteractionEnabled = NO;
+                btnImageView.image = [UIImage imageNamed:@"clinical_history_img.png"];
+                btnImageView.contentMode = UIViewContentModeScaleAspectFit;
+                btnImageView.frame = CGRectMake(20, 5, 40, 35);
+                [btn addSubview:btnImageView];
+                
+                label.text = @"宝宝病历";
+            }
+                break;
+            case 2:
+            {
+                HJHMyImageView *btnImageView = [[HJHMyImageView alloc]init];
+                btnImageView.userInteractionEnabled = NO;
+                btnImageView.image = [UIImage imageNamed:@"vaccination_img.png"];
+                btnImageView.contentMode = UIViewContentModeScaleAspectFit;
+                btnImageView.frame = CGRectMake(20, 5, 40, 35);
+                [btn addSubview:btnImageView];
+                
+                label.text = @"疫苗接种";
+            }
+                break;
+            case 3:
+            {
+                HJHMyImageView *btnImageView = [[HJHMyImageView alloc]init];
+                btnImageView.userInteractionEnabled = NO;
+                btnImageView.image = [UIImage imageNamed:@"health_record_img.png"];
+                btnImageView.contentMode = UIViewContentModeScaleAspectFit;
+                btnImageView.frame = CGRectMake(20, 5, 40, 35);
+                [btn addSubview:btnImageView];
+                
+                label.text = @"体检记录";
+                
+            }
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSDictionary *dic = [self.jianKangListArray objectAtIndex:indexPath.row];
+    NSString *knowId = [DictionaryStringTool stringFromDictionary:dic forKey:@"knowContentUrl"];
+    NSString *title = [DictionaryStringTool stringFromDictionary:dic forKey:@"knowTitle"];
+    knowWebViewController *kwVC = [[knowWebViewController alloc]initWithKnowId:knowId title:title];
+    [self.navigationController pushViewController:kwVC animated:YES];
+}
+
+#pragma mark - tableViewDelegate
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    // Return the number of sections.
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    // Return the number of rows in the section.
+    return self.jianKangListArray.count;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    static NSString *cellIdentifier;
+    cellIdentifier = @"MainCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    
+    if (!cell) {
+        cell = [[SeTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    }
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; 
+    SeTableViewCell* comCell = (SeTableViewCell*)cell;
+    NSDictionary *dic = [self.jianKangListArray objectAtIndex:indexPath.row];
+    comCell.mainLabel.text = [dic objectForKey:@"knowTitle"];
+    return cell;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 40;
+}
+
+#pragma mark - btnClick
+-(void)fistViewBtnClick:(HJHMyButton*)btn{
+    switch (btn.tag) {
+        case 0:
+        {
+            chengZhangViewController *czVC = [[chengZhangViewController alloc]init];
+            [self.navigationController pushViewController:czVC animated:YES];
+        }
+            break;
+        case 1:
+        {
+            baoBaoBinLiViewController *czVC = [[baoBaoBinLiViewController alloc]init];
+            [self.navigationController pushViewController:czVC animated:YES];
+        }
+            break;
+        case 2:
+        {
+            yiMiaoViewController *czVC = [[yiMiaoViewController alloc]init];
+            [self.navigationController pushViewController:czVC animated:YES];
+        }
+            break;
+        case 3:
+        {
+            tijianjiluViewController *czVC = [[tijianjiluViewController alloc]init];
+            [self.navigationController pushViewController:czVC animated:YES];
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+#pragma mark - pullTableViewDelegate
+
+
+-(void)pullTableViewDidTriggerLoadMore:(PullTableView *)pullTableView{
+    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+}
+
+
+-(void)pullTableViewDidTriggerRefresh:(PullTableView *)pullTableView{
+    NSLog(@"hello");
+    NSLog(@"%@",pullTableView);
+    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+}
+
+-(void)refreshListDataBack{
+    [self pullTableRefresh:(PullTableView*)self._tableView];
+}
+
+-(void)loadMoreListDataBack{
+    [self pullTableViewLoadMore:(PullTableView*)self._tableView];
+}
+
+-(void)changeStyle{
+    NSDate* date = [NSDate date];
+    ((PullTableView*)self._tableView).pullLastRefreshDate = date;
+    ((PullTableView*)self._tableView).pullTableIsRefreshing = NO;
+    ((PullTableView*)self._tableView).pullTableIsLoadingMore = NO;
+}
+
+-(void)pullTableRefresh:(PullTableView*)pullTableView
+{
+    NSDate* date = [NSDate date];
+    pullTableView.pullLastRefreshDate = date;
+    pullTableView.pullTableIsRefreshing = NO;
+    pullTableView.loadMoreView.isLoading = NO;
+}
+
+-(void)pullTableViewLoadMore:(PullTableView*)pullTableView
+{
+    NSDate* date = [NSDate date];
+    pullTableView.pullLastRefreshDate = date;
+    pullTableView.pullTableIsLoadingMore = NO;
+    pullTableView.refreshView.isLoading = NO;
+}
+@end

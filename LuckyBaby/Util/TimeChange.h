@@ -1,0 +1,19 @@
+//
+//  TimeChange.h
+//  LuckyBaby
+//
+//  Created by 黄嘉宏 on 15-4-4.
+//  Copyright (c) 2015年 黄嘉宏. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface TimeChange : NSObject
++(NSString*)timeChage:(NSString*)time;
+
++(NSString*)timeChage2:(NSString*)time;
+
++(NSString *) compareCurrentTime:(NSDate*) compareDate;
+
++(NSDictionary*)getWeekday:(NSString*)string;
+@end

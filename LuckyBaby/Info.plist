@@ -4,10 +4,35 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>健康宝贝</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>icon</string>
+			</array>
+			<key>UIPrerenderedIcon</key>
+			<false/>
+		</dict>
+		<key>UINewsstandIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string></string>
+			</array>
+			<key>UINewsstandBindingEdge</key>
+			<string>UINewsstandBindingEdgeLeft</string>
+			<key>UINewsstandBindingType</key>
+			<string>UINewsstandBindingTypeMagazine</string>
+		</dict>
+	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>hjh.com.$(PRODUCT_NAME:rfc1034identifier)</string>
+	<string>com.sm.kid.</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -22,6 +47,10 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string></string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -43,5 +72,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

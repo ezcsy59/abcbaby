@@ -7,8 +7,11 @@
 //
 
 #import "AppDelegate.h"
+#import "BMKMapManager.h"
+@interface AppDelegate ()<BMKGeneralDelegate>{
+    BMKMapManager* _mapManager;
+}
 
-@interface AppDelegate ()
 
 @end
 
@@ -16,6 +19,30 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    //聊天初始化
+    [[EaseMob sharedInstance] registerSDKWithAppKey:@"huangjiahong#youziyuan"];
+    [[EaseMob sharedInstance] application:application
+            didFinishLaunchingWithOptions:launchOptions];
+    
+    //百度地图
+    _mapManager = [[BMKMapManager alloc]init];
+    // 如果要关注网络及授权验证事件，请设定     generalDelegate参数
+    BOOL ret = [_mapManager start:@"8MHdEBMaHv5v3GTdC7X0zdsh"  generalDelegate:self];
+    if (!ret) {
+        NSLog(@"manager start failed!");
+    }
+
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    // Override point for customization after application launch.
+    self.window.backgroundColor = [UIColor whiteColor];
+    self.rootViewController = [[RootViewController alloc] init];
+    self.fistViewController = [[FirstLoginViewController alloc] init];
+    self.window.rootViewController = self.fistViewController;
+    [self.window makeKeyAndVisible];
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     // Override point for customization after application launch.
     return YES;
 }
