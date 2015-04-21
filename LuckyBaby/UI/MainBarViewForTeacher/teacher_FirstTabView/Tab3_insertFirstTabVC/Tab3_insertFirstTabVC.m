@@ -1,12 +1,12 @@
 //
-//  FirstTabViewController.m
+//  Tab3_insertFirstTabVC.m
 //  shuoshuo3
 //
 //  Created by huang on 3/5/14.
 //  Copyright (c) 2014 huang. All rights reserved.
 //
 
-#import "FirstTabViewController.h"
+#import "Tab3_insertFirstTabVC.h"
 #import "HJHMainCell.h"
 #import "tianjiaBabyViewController.h"
 #import "qinLieBiaoViewController.h"
@@ -17,7 +17,7 @@
 #import "firstXiangQingViewController.h"
 #define kDefaultToolbarHeight 42
 #define kIOS7 0
-@interface FirstTabViewController ()<firstXiangQingTableViewCell,sendMessage>
+@interface Tab3_insertFirstTabVC ()<firstXiangQingTableViewCell,sendMessage>
 @property(nonatomic,strong)EGORefreshTableHeaderView *_refreshHeaderView;
 @property(nonatomic,strong)PullTableView *_tableView;
 @property(nonatomic,strong)HJHMyImageView *mainImageView;
@@ -29,7 +29,7 @@
 
 @end
 
-@implementation FirstTabViewController
+@implementation Tab3_insertFirstTabVC
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -50,6 +50,9 @@
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
+    NSUserDefaults *useD = [NSUserDefaults standardUserDefaults];
+    [useD setValue:@"0" forKey:@"firstIn"];
+    [useD synchronize];
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
@@ -261,7 +264,7 @@
         [view removeFromSuperview];
     }
     cell = [[firstXiangQingTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; 
     firstXiangQingTableViewCell *qCell = (firstXiangQingTableViewCell*)cell;
     qCell.backgroundColor = [UIColor colorWithHexString:@"f9f9f9"];
     qCell.numberIndexRow = [NSString stringWithFormat:@"%ld",(long)indexPath.row];

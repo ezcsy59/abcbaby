@@ -14,6 +14,8 @@
 #import "PostDataBean.h"
 #import "SoundRecord.h"
 #import "KGVoiceView.h"
+#import "UIButton+WebCache.h"
+#import "dongtaiNetWork.h"
 
 @interface addShiJianTableViewController ()<UITableViewDataSource,UITableViewDelegate,KGEmojiViewDelegate,ChoseAblumDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,HJHPickerViewDelegate,KGSelectViewDelegate,UITextViewDelegate>
 @property(nonatomic,strong)UITableView *_tableView;
@@ -43,25 +45,29 @@
 
 @property(nonatomic,strong)KGVoiceView *voiceView;
 
+@property(nonatomic,strong)NSString *medioURL;
+
+@property(nonatomic,strong)HJHMyButton *videoBtn;
+
 @end
 
 @implementation addShiJianTableViewController
 
 -(void)viewWillAppear:(BOOL)animated{
     self.navigationController.navigationBar.hidden = YES;
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveStoryCommentSuccess:) name:@"saveStoryCommentSuccess" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveStoryCommentFail:) name:@"saveStoryCommentFail" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveStorySuccess:) name:@"saveStorySuccess" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveStoryFail:) name:@"saveStoryFail" object:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
--(void)saveStoryCommentSuccess:(NSNotification*)noti{
-    
+-(void)saveStorySuccess:(NSNotification*)noti{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
--(void)saveStoryCommentFail:(NSNotification*)noti{
+-(void)saveStoryFail:(NSNotification*)noti{
     
 }
 
@@ -81,6 +87,7 @@
     
     [self addRigthBtn];
     [self.rigthBtn setTitle:@"发布" forState:UIControlStateNormal];
+    [self.rigthBtn addTarget:self action:@selector(postBtnClick) forControlEvents:UIControlEventTouchUpInside];
     
     [self setTableView];
     
@@ -222,12 +229,12 @@
     }
     if(indexPath.row == 3){
         cell.backgroundColor = [UIColor colorWithHexString:@"f9f9f9"];
-        HJHMyButton *videoBtn = [[HJHMyButton alloc]init];
-        videoBtn.frame = CGRectMake(10, 7.5, 55, 55);
-        [videoBtn setImage:[UIImage imageNamed:@"video_record"] forState:UIControlStateNormal];
-        [videoBtn addTarget:self action:@selector(videoBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        videoBtn.tag = 0;
-        [cell addSubview:videoBtn];
+        self.videoBtn = [[HJHMyButton alloc]init];
+        self.videoBtn.frame = CGRectMake(10, 7.5, 55, 55);
+        [self.videoBtn setImage:[UIImage imageNamed:@"video_record"] forState:UIControlStateNormal];
+        [self.videoBtn addTarget:self action:@selector(videoBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        self.videoBtn.tag = 0;
+        [cell addSubview:self.videoBtn];
     }
     if(indexPath.row == 4){
         cell.backgroundColor = [UIColor colorWithHexString:@"f4f4f4"];
@@ -402,6 +409,21 @@
     [self.recorder buttonSayBegin];
 }
 
+-(void)videoBtnClick:(HJHMyButton *)btn{
+    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+    imagePickerController.delegate = self;
+    imagePickerController.allowsEditing = YES;
+    imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+    imagePickerController.mediaTypes = [[NSArray alloc] initWithObjects: (NSString *)  kUTTypeMovie  , nil];;
+    [self presentViewController:imagePickerController animated:YES completion:^{}];
+}
+
+-(void)postBtnClick{
+    dongtaiNetWork *dongT = [[dongtaiNetWork alloc]init];
+    NSDictionary *dic = [plistDataManager getDataWithKey:user_loginList];
+    [dongT saveStoryWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] storyDesc:self.xiangQingLabel.text voiceUrl:@"" videoUrl:@"" firstType:self.firstLabel.text storyPlace:self.diDianTextField.text publicRange:self.keJianLabel.text storyLatitude:@"" storyLongitude:@"" imageList:@[]];
+}
+
 -(void)voiceBtnClickUp{
     [self.voiceView hideView];
     [self.voiceView removeFromSuperview];
@@ -461,6 +483,35 @@
     }
     return YES;
 }
+
+#pragma mark - image picker delegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    NSString *mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
+    //把相片存储到相机的相册中
+    //UIImageWriteToSavedPhotosAlbum(image, nil, nil,nil);
+    //[self.videoBtn setImageWithURL:[NSURL URLWithString:mediaURL] placeholderImage:[UIImage imageNamed:@"video_record"]];
+    self.medioURL = mediaURL;
+    
+//    NSMutableArray *array = [NSMutableArray array];
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        ALAssetsLibraryGroupsEnumerationResultsBlock listGroupBlock = ^(ALAssetsGroup *group, BOOL *stop) {
+//            [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//                [obj enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+//                    if ([result thumbnail] != nil) {
+//                        // 视频
+//                        if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ){
+//                            NSLog(@"%@",result);
+//                            // 和图片方法类似
+//                        }
+//                    }
+//                }];
+//            }];
+//        };
+//    });
+    [picker dismissViewControllerAnimated:YES completion:^{}];
+}
+
 
 #pragma mark - HJHPickerViewDelegate
 -(void)hjhGetDifang:(NSString*)area{

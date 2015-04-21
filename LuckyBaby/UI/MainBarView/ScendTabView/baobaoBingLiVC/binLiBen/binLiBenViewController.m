@@ -24,24 +24,7 @@
 @implementation binLiBenViewController
 
 -(void)viewWillAppear:(BOOL)animated{
-    NSUserDefaults *useD = [NSUserDefaults standardUserDefaults];
-    NSString *string = [useD objectForKey:@"firstIn"];
-    if ([string isKindOfClass:[NSString class]]) {
-        if (![string isEqualToString:@"1"]) {
-            [useD setValue:@"1" forKey:@"firstIn"];
-            [useD synchronize];
-            [self getData];
-        }
-        else{
-            [useD setValue:@"0" forKey:@"firstIn"];
-            [useD synchronize];
-        }
-    }
-    else{
-        [useD setValue:@"1" forKey:@"firstIn"];
-        [useD synchronize];
-        [self getData];
-    }
+    [self getData];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getDiseaseListSuccess:) name:@"getDiseaseListSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getDiseaseListFail:) name:@"getDiseaseListFail" object:nil];
     
@@ -50,9 +33,6 @@
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
-    NSUserDefaults *useD = [NSUserDefaults standardUserDefaults];
-    [useD setValue:@"0" forKey:@"firstIn"];
-    [useD synchronize];
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
@@ -131,7 +111,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     self.view.backgroundColor = [UIColor colorWithHexString:@"f1f1f1"];
     
     [self setTableView];
@@ -177,7 +157,7 @@
         [view removeFromSuperview];
     }
     cell = [[BinLiXiangQingTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; 
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     BinLiXiangQingTableViewCell *qCell = (BinLiXiangQingTableViewCell*)cell;
     qCell.backgroundColor = [UIColor colorWithHexString:@"f9f9f9"];
     qCell.numberIndexRow = [NSString stringWithFormat:@"%ld",(long)indexPath.row];

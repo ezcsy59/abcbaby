@@ -592,4 +592,58 @@
         NSLog(@"%@",operation);
     }];
 }
+
+-(void)saveStoryWithChildIdFamily:(NSString*)childIdFamily storyDesc:(NSString*)storyDesc voiceUrl:(NSString*)voiceUrl videoUrl:(NSString*)videoUrl firstType:(NSString*)firstType storyPlace:(NSString*)storyPlace publicRange:(NSString*)publicRange storyLatitude:(NSString*)storyLatitude storyLongitude:(NSString*)storyLongitude imageList:(NSArray *)imageList{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:childIdFamily forKey:@"childIdFamily"];
+    [dic setObject:storyDesc forKey:@"storyDesc"];
+    if (voiceUrl.length > 0) {
+        [dic setObject:voiceUrl forKey:@"voiceUrl"];
+    }
+    
+    if (videoUrl.length > 0) {
+        [dic setObject:videoUrl forKey:@"videoUrl"];
+    }
+    
+    [dic setObject:firstType forKey:@"firstType"];
+    [dic setObject:storyPlace forKey:@"storyPlace"];
+    [dic setObject:publicRange forKey:@"publicRange"];
+    [dic setObject:storyLatitude forKey:@"storyLatitude"];
+    if (imageList.count > 0) {
+        [dic setObject:imageList forKey:@"imageList"];
+    }
+    
+    dic = [networkDicHeader addHeaderDic:dic];
+    NSString *urlString = [NSString stringWithFormat:@"%@/school/story/saveStory",serverAPIAddress];
+    
+    self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"数据下载中..." cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:nil userInfo:nil];
+    [self.tipView showWithLoading];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+    [manager POST:urlString parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@",operation);
+        NSLog(@"%@",responseObject);
+        NSString *flag = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"flag"];
+        if ([flag isEqualToString:@"0"]) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"saveStorySuccess" object:responseObject];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:@"下载完成" duration:0.8];
+        }
+        else{
+            NSString *msg = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"msg"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"saveStoryFail" object:msg];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:@"下载失败" duration:0.8];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [tipView show];
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+    }];
+}
 @end

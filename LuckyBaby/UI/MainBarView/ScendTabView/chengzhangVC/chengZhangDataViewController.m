@@ -37,32 +37,12 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    NSUserDefaults *useD = [NSUserDefaults standardUserDefaults];
-    NSString *string = [useD objectForKey:@"firstIn"];
-    if ([string isKindOfClass:[NSString class]]) {
-        if (![string isEqualToString:@"1"]) {
-            [useD setValue:@"1" forKey:@"firstIn"];
-            [useD synchronize];
-            [self getData];
-        }
-        else{
-            [useD setValue:@"0" forKey:@"firstIn"];
-            [useD synchronize];
-        }
-    }
-    else{
-        [useD setValue:@"1" forKey:@"firstIn"];
-        [useD synchronize];
-        [self getData];
-    }
+    [self getData];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listHealthInfoSuccess:) name:@"listHealthInfoSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listHealthInfoFail:) name:@"listHealthInfoFail" object:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
-    NSUserDefaults *useD = [NSUserDefaults standardUserDefaults];
-    [useD setValue:@"0" forKey:@"firstIn"];
-    [useD synchronize];
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
@@ -116,7 +96,7 @@
     if (!cell) {
         cell = [[chengZhangDataTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; 
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     chengZhangDataTableViewCell *dCell = (chengZhangDataTableViewCell*)cell;
     dCell.leftLabel3.text = [DictionaryStringTool stringFromDictionary:[self.chengZhangDataArray objectAtIndex:indexPath.row] forKey:@"height"];
     dCell.leftLabel4.text = [DictionaryStringTool stringFromDictionary:[self.chengZhangDataArray objectAtIndex:indexPath.row] forKey:@"weight"];
@@ -140,13 +120,13 @@
 
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

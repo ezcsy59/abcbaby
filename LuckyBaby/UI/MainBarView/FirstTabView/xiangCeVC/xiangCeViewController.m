@@ -210,6 +210,7 @@
     self.SView = nil;
 }
 
+
 -(void)cancalSelectClicked{
     [self.SView removeFromSuperview];
     self.SView = nil;

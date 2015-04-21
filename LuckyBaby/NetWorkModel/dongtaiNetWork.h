@@ -53,4 +53,7 @@
 
 //评论事件
 -(void)saveStoryCommentWithStoryId:(NSString*)storyId commentDesc:(NSString*)commentDesc voiceUrl:(NSString*)voiceUrl;
+
+//新增事件详情
+-(void)saveStoryWithChildIdFamily:(NSString*)childIdFamily storyDesc:(NSString*)storyDesc voiceUrl:(NSString*)voiceUrl videoUrl:(NSString*)videoUrl firstType:(NSString*)firstType storyPlace:(NSString*)storyPlace publicRange:(NSString*)publicRange storyLatitude:(NSString*)storyLatitude storyLongitude:(NSString*)storyLongitude imageList:(NSArray *)imageList;
 @end

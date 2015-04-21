@@ -37,9 +37,6 @@
 @implementation chuQinViewController
 
 -(void)viewWillAppear:(BOOL)animated{
-    NSUserDefaults *useD = [NSUserDefaults standardUserDefaults];
-    [useD setValue:@"1" forKey:@"firstIn"];
-    [useD synchronize];
 }
 
 - (void)viewDidLoad {
@@ -60,14 +57,14 @@
     [self setMainView];
     [self setTabBar];
     [self choseView:0];
-
+    
 }
 
 -(void)setMainView{
     //只创建一次
-    self.firstTabVC = [[chuQinFirstViewController alloc]init];
-    [self addChildViewController:self.firstTabVC];
-    self.firstTabVC.view.frame = CGRectMake(0, -5, ScreenHeigth, ScreenHeigth - [self getNavHight] - 45);
+    UIViewController *vc = [[UIViewController alloc]init];
+    [self addChildViewController:vc];
+    vc.view.frame = CGRectMake(0, -5, ScreenHeigth, ScreenHeigth - [self getNavHight] - 45);
     //    self.secondTabVC = [[SecondTabViewController alloc]init];
     //    [self addChildViewController:self.secondTabVC];
     //    self.secondTabVC.view.frame = CGRectMake(0, -5, ScreenHeigth, ScreenHeigth - [self getNavHight] - 45);
@@ -81,7 +78,7 @@
     //选取第一vc
     self.mainImageView = [[HJHMyImageView alloc]initWithFrame:CGRectMake(0, [self getNavHight], ScreenHeigth, ScreenHeigth - [self getNavHight] - 50)];
     self.mainImageView.backgroundColor = [UIColor clearColor];
-    [self.mainImageView addSubview:self.firstTabVC.view];
+    [self.mainImageView addSubview:vc.view];
     [self.view addSubview:self.mainImageView];
     [self.view sendSubviewToBack:self.mainImageView];
 }
@@ -156,9 +153,9 @@
         {
             [self.currentViewController.view removeFromSuperview];
             self.currentViewController = nil;
-//            if (!self.firstTabVC) {
-                self.firstTabVC = [[chuQinFirstViewController alloc]init];
-//            }
+            //            if (!self.firstTabVC) {
+            self.firstTabVC = [[chuQinFirstViewController alloc]init];
+            //            }
             [self addChildViewController:self.firstTabVC];
             self.firstTabVC.view.frame = CGRectMake(0, -5, ScreenHeigth, ScreenHeigth - [self getNavHight] - 45);
             self.currentViewController = self.firstTabVC;
@@ -275,13 +272,13 @@
     self.SView = nil;
 }
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

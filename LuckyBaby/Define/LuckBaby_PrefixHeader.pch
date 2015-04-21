@@ -62,7 +62,7 @@
 #define ShuoShuoPath [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0]
 
 //测试地址
-#define serverAPIAddress @"http://www.myhealthybaby.cn:9099"
+#define serverAPIAddress @"http://120.25.209.156:16980"
 
 //七牛地址
 #define qiniuAdrress @"http://childmanager.qiniudn.com"

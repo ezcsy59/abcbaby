@@ -19,32 +19,11 @@
 @implementation chuQinFirstViewController
 
 -(void)viewWillAppear:(BOOL)animated{
-    NSUserDefaults *useD = [NSUserDefaults standardUserDefaults];
-    NSString *string = [useD objectForKey:@"firstIn"];
-    if ([string isKindOfClass:[NSString class]]) {
-        if (![string isEqualToString:@"1"]) {
-            [useD setValue:@"1" forKey:@"firstIn"];
-            [useD synchronize];
-            [self getData];
-        }
-        else{
-            [useD setValue:@"0" forKey:@"firstIn"];
-            [useD synchronize];
-        }
-    }
-    else{
-        [useD setValue:@"1" forKey:@"firstIn"];
-        [useD synchronize];
-        [self getData];
-    }
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getSemesterExceptionSuccess:) name:@"getSemesterExceptionSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getSemesterExceptionFail:) name:@"getSemesterExceptionFail" object:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
-    NSUserDefaults *useD = [NSUserDefaults standardUserDefaults];
-    [useD setValue:@"0" forKey:@"firstIn"];
-    [useD synchronize];
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 

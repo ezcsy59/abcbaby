@@ -535,6 +535,22 @@
     return YES;
 }
 
+#pragma mark - image picker delegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
+    UIImage *image2 = [info objectForKey:UIImagePickerControllerOriginalImage];
+    //把相片存储到相机的相册中
+    //UIImageWriteToSavedPhotosAlbum(image, nil, nil,nil);
+    
+    [self.photoBigImageArray addObject:image2];
+    [self.photoSmallImageArray addObject:image];
+    
+    
+    [picker dismissViewControllerAnimated:YES completion:^{}];
+}
+
+
 #pragma mark - ChoseAblumDelegate
 -(void)getPhotoDataArray:(NSMutableArray*)array{
     for (PostDataBean *pBean in array) {

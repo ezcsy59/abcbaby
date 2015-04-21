@@ -9,7 +9,13 @@
 #import "HJHLoginViewController.h"
 #import "UIBasicNavigationViewController.h"
 #import "KGTipView.h"
+
+#import "MainBarTeacherViewController.h"
+
 @interface RootViewController : UIViewController <KGTipViewDelegate>
+
+//新增一个main的tab主页
+@property(nonatomic,strong) MainBarTeacherViewController* MainBarTeacherTabViewController;
 
 @property(nonatomic,strong) MainBarViewController* mainTabViewController;
 @property(nonatomic,strong) UIBasicNavigationViewController* rootNav;
@@ -22,5 +28,9 @@
 -(void)deleteLoginView;
 -(void)addMainView;
 -(void)deleteMainView;
+
+//新增一个main的tab主页
+-(void)addT_MainView;
+-(void)deleteT_MainView;
 
 @end

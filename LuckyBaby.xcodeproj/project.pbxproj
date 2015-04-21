@@ -34,6 +34,18 @@
 		82326B7F1ADA8895004F5A84 /* pengyouquanTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 82326B7E1ADA8895004F5A84 /* pengyouquanTableViewCell.m */; };
 		8260204D1AE1E318009DD9D6 /* baiduDiTuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8260204C1AE1E318009DD9D6 /* baiduDiTuViewController.m */; };
 		827033E21AD9F37B004ED637 /* emojiStringChange.m in Sources */ = {isa = PBXBuildFile; fileRef = 827033E11AD9F37B004ED637 /* emojiStringChange.m */; };
+		8271803A1AE66F160026B6DB /* MainBarTeacherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8271801C1AE66F160026B6DB /* MainBarTeacherViewController.m */; };
+		8271803B1AE66F160026B6DB /* t_FirstTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8271801F1AE66F160026B6DB /* t_FirstTabViewController.m */; };
+		8271803C1AE66F160026B6DB /* Tab1_insertFirstTabVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 827180221AE66F160026B6DB /* Tab1_insertFirstTabVC.m */; };
+		8271803D1AE66F160026B6DB /* Tab2_insertFirstTabVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 827180251AE66F160026B6DB /* Tab2_insertFirstTabVC.m */; };
+		8271803E1AE66F160026B6DB /* Tab3_insertFirstTabVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 827180281AE66F160026B6DB /* Tab3_insertFirstTabVC.m */; };
+		8271803F1AE66F160026B6DB /* Tab4_insertFirstTabVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 8271802B1AE66F160026B6DB /* Tab4_insertFirstTabVC.m */; };
+		827180401AE66F160026B6DB /* Tab5_insertFirstTabVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 8271802E1AE66F160026B6DB /* Tab5_insertFirstTabVC.m */; };
+		827180411AE66F160026B6DB /* t_FouthTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 827180311AE66F160026B6DB /* t_FouthTabViewController.m */; };
+		827180421AE66F160026B6DB /* t_HJHFouthMainCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 827180331AE66F160026B6DB /* t_HJHFouthMainCell.m */; };
+		827180431AE66F160026B6DB /* t_SecondTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 827180361AE66F160026B6DB /* t_SecondTabViewController.m */; };
+		827180441AE66F160026B6DB /* t_ThirdTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 827180391AE66F160026B6DB /* t_ThirdTabViewController.m */; };
+		827180471AE6798A0026B6DB /* systemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 827180461AE6798A0026B6DB /* systemViewController.m */; };
 		828F2B091AE1FA380093C834 /* xigaiMimaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 828F2B081AE1FA380093C834 /* xigaiMimaViewController.m */; };
 		828F2B0C1AE1FA450093C834 /* tiXingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 828F2B0B1AE1FA450093C834 /* tiXingViewController.m */; };
 		828F2B0F1AE2058E0093C834 /* addTiXingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 828F2B0E1AE2058E0093C834 /* addTiXingViewController.m */; };
@@ -630,6 +642,30 @@
 		8260204C1AE1E318009DD9D6 /* baiduDiTuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = baiduDiTuViewController.m; sourceTree = "<group>"; };
 		827033E01AD9F37B004ED637 /* emojiStringChange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emojiStringChange.h; sourceTree = "<group>"; };
 		827033E11AD9F37B004ED637 /* emojiStringChange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = emojiStringChange.m; sourceTree = "<group>"; };
+		8271801B1AE66F160026B6DB /* MainBarTeacherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainBarTeacherViewController.h; sourceTree = "<group>"; };
+		8271801C1AE66F160026B6DB /* MainBarTeacherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainBarTeacherViewController.m; sourceTree = "<group>"; };
+		8271801E1AE66F160026B6DB /* t_FirstTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = t_FirstTabViewController.h; sourceTree = "<group>"; };
+		8271801F1AE66F160026B6DB /* t_FirstTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = t_FirstTabViewController.m; sourceTree = "<group>"; };
+		827180211AE66F160026B6DB /* Tab1_insertFirstTabVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab1_insertFirstTabVC.h; sourceTree = "<group>"; };
+		827180221AE66F160026B6DB /* Tab1_insertFirstTabVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab1_insertFirstTabVC.m; sourceTree = "<group>"; };
+		827180241AE66F160026B6DB /* Tab2_insertFirstTabVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab2_insertFirstTabVC.h; sourceTree = "<group>"; };
+		827180251AE66F160026B6DB /* Tab2_insertFirstTabVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab2_insertFirstTabVC.m; sourceTree = "<group>"; };
+		827180271AE66F160026B6DB /* Tab3_insertFirstTabVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab3_insertFirstTabVC.h; sourceTree = "<group>"; };
+		827180281AE66F160026B6DB /* Tab3_insertFirstTabVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab3_insertFirstTabVC.m; sourceTree = "<group>"; };
+		8271802A1AE66F160026B6DB /* Tab4_insertFirstTabVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab4_insertFirstTabVC.h; sourceTree = "<group>"; };
+		8271802B1AE66F160026B6DB /* Tab4_insertFirstTabVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab4_insertFirstTabVC.m; sourceTree = "<group>"; };
+		8271802D1AE66F160026B6DB /* Tab5_insertFirstTabVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab5_insertFirstTabVC.h; sourceTree = "<group>"; };
+		8271802E1AE66F160026B6DB /* Tab5_insertFirstTabVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab5_insertFirstTabVC.m; sourceTree = "<group>"; };
+		827180301AE66F160026B6DB /* t_FouthTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = t_FouthTabViewController.h; sourceTree = "<group>"; };
+		827180311AE66F160026B6DB /* t_FouthTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = t_FouthTabViewController.m; sourceTree = "<group>"; };
+		827180321AE66F160026B6DB /* t_HJHFouthMainCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = t_HJHFouthMainCell.h; sourceTree = "<group>"; };
+		827180331AE66F160026B6DB /* t_HJHFouthMainCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = t_HJHFouthMainCell.m; sourceTree = "<group>"; };
+		827180351AE66F160026B6DB /* t_SecondTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = t_SecondTabViewController.h; sourceTree = "<group>"; };
+		827180361AE66F160026B6DB /* t_SecondTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = t_SecondTabViewController.m; sourceTree = "<group>"; };
+		827180381AE66F160026B6DB /* t_ThirdTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = t_ThirdTabViewController.h; sourceTree = "<group>"; };
+		827180391AE66F160026B6DB /* t_ThirdTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = t_ThirdTabViewController.m; sourceTree = "<group>"; };
+		827180451AE6798A0026B6DB /* systemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = systemViewController.h; sourceTree = "<group>"; };
+		827180461AE6798A0026B6DB /* systemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = systemViewController.m; sourceTree = "<group>"; };
 		828F2B071AE1FA380093C834 /* xigaiMimaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xigaiMimaViewController.h; sourceTree = "<group>"; };
 		828F2B081AE1FA380093C834 /* xigaiMimaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = xigaiMimaViewController.m; sourceTree = "<group>"; };
 		828F2B0A1AE1FA450093C834 /* tiXingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tiXingViewController.h; sourceTree = "<group>"; };
@@ -1682,6 +1718,107 @@
 				828F2B081AE1FA380093C834 /* xigaiMimaViewController.m */,
 			);
 			path = xiugaiZhangHaoVC;
+			sourceTree = "<group>";
+		};
+		8271801A1AE66F160026B6DB /* MainBarViewForTeacher */ = {
+			isa = PBXGroup;
+			children = (
+				8271801B1AE66F160026B6DB /* MainBarTeacherViewController.h */,
+				8271801C1AE66F160026B6DB /* MainBarTeacherViewController.m */,
+				8271801D1AE66F160026B6DB /* teacher_FirstTabView */,
+				8271802F1AE66F160026B6DB /* teacher_FouthTabView */,
+				827180341AE66F160026B6DB /* teacher_ScendTabView */,
+				827180371AE66F160026B6DB /* teacher_ThirdTabView */,
+			);
+			path = MainBarViewForTeacher;
+			sourceTree = "<group>";
+		};
+		8271801D1AE66F160026B6DB /* teacher_FirstTabView */ = {
+			isa = PBXGroup;
+			children = (
+				8271801E1AE66F160026B6DB /* t_FirstTabViewController.h */,
+				8271801F1AE66F160026B6DB /* t_FirstTabViewController.m */,
+				827180201AE66F160026B6DB /* Tab1_insertFirstTabVC */,
+				827180231AE66F160026B6DB /* Tab2_insertFirstTabVC */,
+				827180261AE66F160026B6DB /* Tab3_insertFirstTabVC */,
+				827180291AE66F160026B6DB /* Tab4_insertFirstTabVC */,
+				8271802C1AE66F160026B6DB /* Tab5_insertFirstTabVC */,
+			);
+			path = teacher_FirstTabView;
+			sourceTree = "<group>";
+		};
+		827180201AE66F160026B6DB /* Tab1_insertFirstTabVC */ = {
+			isa = PBXGroup;
+			children = (
+				827180211AE66F160026B6DB /* Tab1_insertFirstTabVC.h */,
+				827180221AE66F160026B6DB /* Tab1_insertFirstTabVC.m */,
+			);
+			path = Tab1_insertFirstTabVC;
+			sourceTree = "<group>";
+		};
+		827180231AE66F160026B6DB /* Tab2_insertFirstTabVC */ = {
+			isa = PBXGroup;
+			children = (
+				827180241AE66F160026B6DB /* Tab2_insertFirstTabVC.h */,
+				827180251AE66F160026B6DB /* Tab2_insertFirstTabVC.m */,
+			);
+			path = Tab2_insertFirstTabVC;
+			sourceTree = "<group>";
+		};
+		827180261AE66F160026B6DB /* Tab3_insertFirstTabVC */ = {
+			isa = PBXGroup;
+			children = (
+				827180271AE66F160026B6DB /* Tab3_insertFirstTabVC.h */,
+				827180281AE66F160026B6DB /* Tab3_insertFirstTabVC.m */,
+			);
+			path = Tab3_insertFirstTabVC;
+			sourceTree = "<group>";
+		};
+		827180291AE66F160026B6DB /* Tab4_insertFirstTabVC */ = {
+			isa = PBXGroup;
+			children = (
+				8271802A1AE66F160026B6DB /* Tab4_insertFirstTabVC.h */,
+				8271802B1AE66F160026B6DB /* Tab4_insertFirstTabVC.m */,
+			);
+			path = Tab4_insertFirstTabVC;
+			sourceTree = "<group>";
+		};
+		8271802C1AE66F160026B6DB /* Tab5_insertFirstTabVC */ = {
+			isa = PBXGroup;
+			children = (
+				8271802D1AE66F160026B6DB /* Tab5_insertFirstTabVC.h */,
+				8271802E1AE66F160026B6DB /* Tab5_insertFirstTabVC.m */,
+			);
+			path = Tab5_insertFirstTabVC;
+			sourceTree = "<group>";
+		};
+		8271802F1AE66F160026B6DB /* teacher_FouthTabView */ = {
+			isa = PBXGroup;
+			children = (
+				827180301AE66F160026B6DB /* t_FouthTabViewController.h */,
+				827180311AE66F160026B6DB /* t_FouthTabViewController.m */,
+				827180321AE66F160026B6DB /* t_HJHFouthMainCell.h */,
+				827180331AE66F160026B6DB /* t_HJHFouthMainCell.m */,
+			);
+			path = teacher_FouthTabView;
+			sourceTree = "<group>";
+		};
+		827180341AE66F160026B6DB /* teacher_ScendTabView */ = {
+			isa = PBXGroup;
+			children = (
+				827180351AE66F160026B6DB /* t_SecondTabViewController.h */,
+				827180361AE66F160026B6DB /* t_SecondTabViewController.m */,
+			);
+			path = teacher_ScendTabView;
+			sourceTree = "<group>";
+		};
+		827180371AE66F160026B6DB /* teacher_ThirdTabView */ = {
+			isa = PBXGroup;
+			children = (
+				827180381AE66F160026B6DB /* t_ThirdTabViewController.h */,
+				827180391AE66F160026B6DB /* t_ThirdTabViewController.m */,
+			);
+			path = teacher_ThirdTabView;
 			sourceTree = "<group>";
 		};
 		82B2961A1AD0C41800E33DA3 /* AblumVideoView */ = {
@@ -2792,6 +2929,8 @@
 				82B827521ADBEED3008391CF /* KGEmojiView.m */,
 				82B981741ADD59D2004F224C /* KGVoiceView.h */,
 				82B981751ADD59D2004F224C /* KGVoiceView.m */,
+				827180451AE6798A0026B6DB /* systemViewController.h */,
+				827180461AE6798A0026B6DB /* systemViewController.m */,
 				82BAC5CA1AE144C800837AAE /* CLMView.h */,
 				82BAC5CB1AE144C800837AAE /* CLMView.m */,
 			);
@@ -3080,6 +3219,7 @@
 		82DA6A351AC79CB7005654E9 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				8271801A1AE66F160026B6DB /* MainBarViewForTeacher */,
 				82DA6AFE1AC79EB6005654E9 /* loginView */,
 				82DA6A481AC79CE9005654E9 /* MainBarView */,
 				82DA6A361AC79CB7005654E9 /* MainView */,
@@ -3124,11 +3264,11 @@
 			isa = PBXGroup;
 			children = (
 				82DA6A491AC79CE9005654E9 /* FirstTabView */,
+				82DA6A651AC79CE9005654E9 /* ScendTabView */,
+				82DA6AB21AC79CE9005654E9 /* ThirdTabView */,
 				82DA6A601AC79CE9005654E9 /* FouthTabView */,
 				82DA6A631AC79CE9005654E9 /* MainBarViewController.h */,
 				82DA6A641AC79CE9005654E9 /* MainBarViewController.m */,
-				82DA6A651AC79CE9005654E9 /* ScendTabView */,
-				82DA6AB21AC79CE9005654E9 /* ThirdTabView */,
 			);
 			path = MainBarView;
 			sourceTree = "<group>";
@@ -3724,6 +3864,9 @@
 				82DA6ADB1AC79CE9005654E9 /* SecondTabViewController.m in Sources */,
 				82B75B6B1AD2BBCA006AC593 /* BanjiQunViewController.m in Sources */,
 				82DA68F61AC78D11005654E9 /* FMDatabasePool.m in Sources */,
+				827180411AE66F160026B6DB /* t_FouthTabViewController.m in Sources */,
+				8271803B1AE66F160026B6DB /* t_FirstTabViewController.m in Sources */,
+				827180441AE66F160026B6DB /* t_ThirdTabViewController.m in Sources */,
 				82B9816C1ADD535A004F224C /* SoundRecord.m in Sources */,
 				82DA6A311AC79C34005654E9 /* HJHMyButton.m in Sources */,
 				82DA767C1AD6A9380090FBE1 /* BinLiXiangQingTableViewCell.m in Sources */,
@@ -3735,6 +3878,7 @@
 				82C353321ACAE8C10061141D /* ThirdTableViewCell.m in Sources */,
 				821B944B1ACFD238003A9BE6 /* shenGaoViewController.m in Sources */,
 				82C353081ACAD3CF0061141D /* CustomImageView.m in Sources */,
+				827180421AE66F160026B6DB /* t_HJHFouthMainCell.m in Sources */,
 				82CAACC91AD4065C00583D08 /* addChengZhangDataViewController.m in Sources */,
 				82B8C0C51AD552F9001FD506 /* CalendarDateUtil.m in Sources */,
 				82C3532F1ACAE64C0061141D /* SeTableViewCell.m in Sources */,
@@ -3769,6 +3913,7 @@
 				82B586F41AD138F200EAF95C /* showXiaoPianViewController.m in Sources */,
 				82B81A501AE1D58900AD0268 /* HJHMessageBean.m in Sources */,
 				82B75B641AD2BB8A006AC593 /* chuQinViewController.m in Sources */,
+				827180401AE66F160026B6DB /* Tab5_insertFirstTabVC.m in Sources */,
 				82BA952F1AD66C0000C85A52 /* NewBinLiTableViewController.m in Sources */,
 				82BC08B21AC96CF100FBDB29 /* PullTableView.m in Sources */,
 				82326B731ADA42EB004F5A84 /* DaShiJianTableViewCell.m in Sources */,
@@ -3782,16 +3927,19 @@
 				821B945C1ACFD63C003A9BE6 /* BinLiShiViewController.m in Sources */,
 				82B75B711AD2D0B1006AC593 /* showWebViewController2.m in Sources */,
 				82C3532C1ACAE2770061141D /* networkDicHeader.m in Sources */,
+				8271803F1AE66F160026B6DB /* Tab4_insertFirstTabVC.m in Sources */,
 				82DA6A331AC79C34005654E9 /* HJHMyLabel.m in Sources */,
 				82B81A521AE1D58900AD0268 /* HJHMessageTableViewController.m in Sources */,
 				82B8F7E11ACF8721008D186B /* TimeChange.m in Sources */,
 				82B981621ADD50C3004F224C /* RateTransposer.cpp in Sources */,
 				82B981591ADD50C3004F224C /* DotimeManage.m in Sources */,
 				82B584AE1ACC4AB7008C7D6E /* plistDataManager.m in Sources */,
+				827180431AE66F160026B6DB /* t_SecondTabViewController.m in Sources */,
 				82B584991ACC1215008C7D6E /* HJHPickerView.m in Sources */,
 				82B981651ADD50C3004F224C /* TDStretch.cpp in Sources */,
 				82B8F7C51ACF5E6D008D186B /* dongtaiNetWork.m in Sources */,
 				821B94411ACFB638003A9BE6 /* xiangCeTableViewCell.m in Sources */,
+				8271803E1AE66F160026B6DB /* Tab3_insertFirstTabVC.m in Sources */,
 				82BA94461AD6634500C85A52 /* TQRichTextBaseRun.m in Sources */,
 				82B75B681AD2BBC1006AC593 /* BanjiQuanViewController.m in Sources */,
 				82BA95641AD676B900C85A52 /* WUDemoKeyboardBuilder.m in Sources */,
@@ -3802,6 +3950,7 @@
 				82B8F7CD1ACF69B1008D186B /* qinListTableViewCell.m in Sources */,
 				82DA6B071AC79EB6005654E9 /* SetPasswordViewController.m in Sources */,
 				82B981631ADD50C3004F224C /* SoundTouch.cpp in Sources */,
+				8271803D1AE66F160026B6DB /* Tab2_insertFirstTabVC.m in Sources */,
 				82B8F7D21ACF6F6F008D186B /* qinListTableViewCell2.m in Sources */,
 				82BAC5D21AE15CAF00837AAE /* addZhongDianGuanChaViewController.m in Sources */,
 				82B9815F1ADD50C3004F224C /* FIRFilter.cpp in Sources */,
@@ -3845,12 +3994,14 @@
 				82BC08B71AC96CF100FBDB29 /* Reachability.m in Sources */,
 				82DA6B0D1AC79FC8005654E9 /* HJHUserManager.m in Sources */,
 				82C353041ACAD3CF0061141D /* BigPhotoViewController.m in Sources */,
+				8271803A1AE66F160026B6DB /* MainBarTeacherViewController.m in Sources */,
 				82BA95651AD676B900C85A52 /* WUDemoKeyboardPressedCellPopupView.m in Sources */,
 				82B827531ADBEED3008391CF /* KGEmojiView.m in Sources */,
 				82DA69021AC78D4C005654E9 /* StringTool.m in Sources */,
 				82B81A531AE1D58900AD0268 /* HJHTalkingViewController.m in Sources */,
 				82CAACCF1AD4236700583D08 /* KGCalendarView.m in Sources */,
 				82B587451AD1880000EAF95C /* SHPlot.m in Sources */,
+				827180471AE6798A0026B6DB /* systemViewController.m in Sources */,
 				82DA76831AD6AFA20090FBE1 /* addTiJianJiLuViewViewController.m in Sources */,
 				821B945D1ACFD63C003A9BE6 /* guoMinShiController.m in Sources */,
 				82DA68FF1AC78D11005654E9 /* UIImageView+WebCache.m in Sources */,
@@ -3906,6 +4057,7 @@
 				82DA68FE1AC78D11005654E9 /* UIButton+WebCache.m in Sources */,
 				82BA956D1AD676B900C85A52 /* WUEmoticonsKeyboardToolsView.m in Sources */,
 				82B8279F1ADC07AA008391CF /* firstTimeEmojiArayy.m in Sources */,
+				8271803C1AE66F160026B6DB /* Tab1_insertFirstTabVC.m in Sources */,
 				82B587391AD1873000EAF95C /* SHView.m in Sources */,
 				82DA687E1AC78773005654E9 /* main.m in Sources */,
 				82B6C7741AD01CCC00A6D010 /* chengZhangDataTableViewCell.m in Sources */,
