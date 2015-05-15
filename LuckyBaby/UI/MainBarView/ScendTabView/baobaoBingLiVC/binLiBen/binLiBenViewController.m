@@ -19,11 +19,15 @@
 @property(nonatomic,strong)NSMutableArray *benliBenArray;
 @property(nonatomic,strong)NSString *currentIndexrow;
 @property(nonatomic,strong)NSString *currentMessage;
+
+@property(nonatomic,assign)NSInteger currentPage;
 @end
 
 @implementation binLiBenViewController
 
 -(void)viewWillAppear:(BOOL)animated{
+    self.currentPage = 0;
+    self.benliBenArray = [NSMutableArray array];
     [self getData];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getDiseaseListSuccess:) name:@"getDiseaseListSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getDiseaseListFail:) name:@"getDiseaseListFail" object:nil];
@@ -37,10 +41,9 @@
 }
 
 -(void)getData{
-    self.benliBenArray = [NSMutableArray array];
     jianKangNetWork *jianK = [[jianKangNetWork alloc]init];
     NSDictionary *dic = [plistDataManager getDataWithKey:user_loginList];
-    [jianK getDiseaseListWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] page:@"0" pageSize:@"10"];
+    [jianK getDiseaseListWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] page:[NSString stringWithFormat:@"%d",self.currentPage] pageSize:@"10"];
 }
 
 #pragma mark -logic data
@@ -48,7 +51,16 @@
     NSDictionary *dic = [noti object];
     NSArray *array = [dic objectForKey:@"data"];
     if ([array isKindOfClass:[NSArray class]]) {
-        self.benliBenArray = [[NSMutableArray alloc]initWithArray:array];
+        if ([array isKindOfClass:[NSArray class]]) {
+            if (self.currentPage == 0) {
+                self.benliBenArray = [[NSMutableArray alloc]initWithArray:array];
+            }
+            else{
+                for (NSDictionary *dic in array) {
+                    [self.benliBenArray addObject:dic];
+                }
+            }
+        }
     }
     
     //把［察汗］系列变成［p6］系列
@@ -76,11 +88,24 @@
         [self.benliBenArray replaceObjectAtIndex:i withObject:dcit];
     }
     //************************
+    
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
+    
     [self._tableView reloadData];
 }
 
 -(void)getDiseaseListFail:(NSNotification*)noti{
-    
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
 }
 
 -(void)saveDiseaseCommentSuccess:(NSNotification*)noti{
@@ -156,6 +181,8 @@
     for (UIView *view in cell.subviews) {
         [view removeFromSuperview];
     }
+    [cell removeFromSuperview];
+    cell = nil;
     cell = [[BinLiXiangQingTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     BinLiXiangQingTableViewCell *qCell = (BinLiXiangQingTableViewCell*)cell;
@@ -230,17 +257,19 @@
 }
 
 #pragma mark - pullTableViewDelegate
-
-
 -(void)pullTableViewDidTriggerLoadMore:(PullTableView *)pullTableView{
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    self.currentPage ++;
+    [self getData];
 }
 
 
 -(void)pullTableViewDidTriggerRefresh:(PullTableView *)pullTableView{
     NSLog(@"hello");
     NSLog(@"%@",pullTableView);
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    self.currentPage = 0;
+    [self getData];
 }
 
 -(void)refreshListDataBack{

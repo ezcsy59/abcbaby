@@ -19,4 +19,7 @@
 
 //列表查询提醒
 -(void)listAlertWithPage:(NSString*)page pageSize:(NSString*)pageSize;
+
+//关于app
+-(void)getAboutApp;
 @end

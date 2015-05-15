@@ -18,6 +18,7 @@
 @property(nonatomic,strong)HJHMyLabel *createdTimeLabel;
 @property(nonatomic,strong)HJHMyImageView *photoImage;
 @property(nonatomic,strong)HJHMyButton *pingLunBtn;
+@property(nonatomic,strong)HJHMyButton *yinPinBtn;
 @property(nonatomic,strong)HJHMyImageView *pingLunTextMainView;
 @property(nonatomic,strong)HJHMyImageView *footImageV;
 
@@ -27,6 +28,8 @@
 
 @property(nonatomic,strong)HJHMyLabel *leftTimeLabel;
 @property(nonatomic,strong)HJHMyLabel *leftTimeLabel2;
+
+@property(nonatomic,strong)NSString *voiceUrl;
 @end
 
 @implementation DaShiJianTableViewCell
@@ -99,6 +102,10 @@
     self.createdTimeLabel.font = [UIFont systemFontOfSize:18];
     [self.bgImageView addSubview:self.createdTimeLabel];
     
+    self.yinPinBtn = [[HJHMyButton alloc]init];
+    [self.yinPinBtn setImage:[UIImage imageNamed:@"voice1"] forState:UIControlStateNormal];
+    [self.yinPinBtn addTarget:self action:@selector(yinPinBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.bgImageView addSubview:self.yinPinBtn];
     
     self.pingLunBtn = [[HJHMyButton alloc]init];
     [self.pingLunBtn setImage:[UIImage imageNamed:@"edit1"] forState:UIControlStateNormal];
@@ -177,6 +184,13 @@
     
     self.pingLunBtn.frame = CGRectMake(175, self.createdTimeLabel.frame.origin.y, 30, 30);
     
+    NSString *yinPinUrl = [DictionaryStringTool stringFromDictionary:dic forKey:@"voiceUrl"];
+    if ([yinPinUrl isKindOfClass:[NSString class]]) {
+        if (yinPinUrl.length > 0) {
+            self.yinPinBtn.frame = CGRectMake(140, self.createdTimeLabel.frame.origin.y, 30, 30);
+            self.voiceUrl = yinPinUrl;
+        }
+    }
     
     NSArray *commentArray = [DictionaryStringTool stringFromDictionary:dic forKey:@"commentList"];
     if ([commentArray isKindOfClass:[NSArray class]]) {
@@ -208,6 +222,7 @@
     else{
         self.pingLunTextMainView.frame = CGRectMake(10, self.createdTimeLabel.frame.size.height + self.createdTimeLabel.frame.origin.y + 10, 300, 0);
     }
+    
     self.footImageV.frame = CGRectMake(0, self.pingLunTextMainView.frame.size.height + self.pingLunTextMainView.frame.origin.y + 10, 320, 0.5);
     
     self.bgImageView.frame = CGRectMake(100, 5, 210, self.pingLunTextMainView.frame.size.height + self.pingLunTextMainView.frame.origin.y + 5);
@@ -235,4 +250,8 @@
     [self.delegate2 pingLunBtnClickWithNumberIndexRow:self.numberIndexRow];
 }
 
+-(void)yinPinBtnClick{
+    [self.delegate2 yinPinBtnClickWithNumberIndexRow:self.numberIndexRow];
+    
+}
 @end

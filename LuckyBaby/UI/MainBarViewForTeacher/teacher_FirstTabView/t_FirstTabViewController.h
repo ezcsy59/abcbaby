@@ -12,6 +12,8 @@
 #import "Tab3_insertFirstTabVC.h"
 #import "Tab4_insertFirstTabVC.h"
 #import "Tab5_insertFirstTabVC.h"
+#import "Tab6_insertFirstTabVC.h"
+#import "Tab7_insertFirstTabVC.h"
 
 @interface t_FirstTabViewController : UIViewController
 @property(nonatomic,strong)Tab1_insertFirstTabVC *firstTabVC;
@@ -19,4 +21,6 @@
 @property(nonatomic,strong)Tab3_insertFirstTabVC *thirdTabVC;
 @property(nonatomic,strong)Tab4_insertFirstTabVC *fouthTabVC;
 @property(nonatomic,strong)Tab5_insertFirstTabVC *fiveTabVC;
+@property(nonatomic,strong)Tab6_insertFirstTabVC *sixTabVC;
+@property(nonatomic,strong)Tab7_insertFirstTabVC *seventTabVC;
 @end

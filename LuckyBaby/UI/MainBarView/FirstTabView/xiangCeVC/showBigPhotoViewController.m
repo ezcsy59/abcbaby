@@ -13,15 +13,17 @@
 @property(nonatomic,assign)NSInteger currentX;
 @property(nonatomic,strong)HJHMyLabel *footLabel;
 @property(nonatomic,assign)BOOL isLocationPhoto;
+@property(nonatomic,assign)BOOL isClassShow;
 @end
 
 @implementation showBigPhotoViewController
 
--(instancetype)initWithPhotoA:(NSArray*)photoA andTab:(NSInteger)tag isLocationPhoto:(BOOL)isLocationPhoto{
+-(instancetype)initWithPhotoA:(NSArray*)photoA andTab:(NSInteger)tag isLocationPhoto:(BOOL)isLocationPhoto isClassShow:(BOOL)isClassShow{
     if (self = [super init]) {
         self.photoArray = photoA;
         self.currentX = tag;
         self.isLocationPhoto = isLocationPhoto;
+        self.isClassShow = isClassShow;
     }
     return self;
 }
@@ -43,7 +45,13 @@
         imageV.frame = CGRectMake(i*320, 0, 320, (iPhone5?568:480) - 90);
         if (!self.isLocationPhoto) {
             NSDictionary *dic = [self.photoArray objectAtIndex:i];
-            NSString *imageString = [DictionaryStringTool stringFromDictionary:dic forKey:@"mediaOriginalUrl"];
+            NSString *imageString;
+            if (self.isClassShow == YES) {
+                imageString = [DictionaryStringTool stringFromDictionary:dic forKey:@"photoUrl"];
+            }
+            else{
+                imageString = [DictionaryStringTool stringFromDictionary:dic forKey:@"mediaOriginalUrl"];
+            }
             NSURL *imageUrl = [NSURL URLWithString:imageString];
             [imageV setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"ic_picture_loading.png"]];
         }

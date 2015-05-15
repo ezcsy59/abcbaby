@@ -21,7 +21,9 @@
 @property(nonatomic,strong)EGORefreshTableHeaderView *_refreshHeaderView;
 @property(nonatomic,strong)PullTableView *_tableView;
 @property(nonatomic,strong)HJHMyImageView *mainImageView;
-@property(nonatomic,strong)NSArray *jianKangListArray;
+@property(nonatomic,strong)NSMutableArray *jianKangListArray;
+
+@property(nonatomic,assign)NSInteger currentPage;
 @end
 
 @implementation SecondTabViewController
@@ -38,6 +40,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.currentPage = 0;
+    self.jianKangListArray = [NSMutableArray array];
     [self getData];
     [self setMainImageView];
     [self setMainTableView];
@@ -56,22 +60,40 @@
 
 #pragma mark -logic data
 -(void)getData{
-    self.jianKangListArray = [NSArray array];
     jianKangNetWork *jianKangNetWork1 = [[jianKangNetWork alloc]init];
-    [jianKangNetWork1 getJianKangListWithPageSize:@"20" page:@"0"];
+    [jianKangNetWork1 getJianKangListWithPageSize:@"20" page:[NSString stringWithFormat:@"%d",self.currentPage]];
 }
 
 -(void)getJianKangListSuccess:(NSNotification*)noti{
     NSDictionary *dic = [noti object];
     NSArray *array = [dic objectForKey:@"data"];
     if (array.count > 0) {
-        self.jianKangListArray = array;
+        if (self.currentPage == 0) {
+            self.jianKangListArray = [[NSMutableArray alloc]initWithArray:array];
+        }
+        else{
+            for (NSDictionary *dic in array) {
+                [self.jianKangListArray addObject:dic];
+            }
+        }
     }
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
+    
     [self._tableView reloadData];
 }
 
 -(void)getJianKangListFail:(NSNotification*)noti{
-    
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
 }
 
 -(void)setMainTableView{
@@ -80,7 +102,7 @@
     self._tableView.frame = CGRectMake(0, 0, ScreenWidth, 568 - 198 + 78);
     
     if (!iPhone5) {
-        self._tableView.frame = CGRectMake(0, -5, ScreenWidth, 568 - 198 + 78 - 88);
+        self._tableView.frame = CGRectMake(0, 0, ScreenWidth, 568 - 198 + 78 - 88);
     }
     
     ((PullTableView*)(self._tableView)).pullDelegate = self;
@@ -94,7 +116,9 @@
 -(void)setMainImageView{
     self.mainImageView = [[HJHMyImageView alloc]init];
     self.mainImageView.frame = CGRectMake(0, 0, ScreenWidth, 198 + 60);
-    self.mainImageView.image = [UIImage imageNamed:@"mybaby_top_bg.png"];
+    
+    NSDictionary *dic = [plistDataManager getDataWithKey:user_loginList];
+    [self.mainImageView setImageWithURL:[NSURL URLWithString:[DictionaryStringTool stringFromDictionary:dic forKey:@"childCoverUrl"]] placeholderImage:[UIImage imageNamed:@"mybaby_top_bg.png"]];
     
     for (int i = 0; i < 4; i++) {
         HJHMyButton *btn = [[HJHMyButton alloc]init];
@@ -241,17 +265,19 @@
 }
 
 #pragma mark - pullTableViewDelegate
-
-
 -(void)pullTableViewDidTriggerLoadMore:(PullTableView *)pullTableView{
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    self.currentPage ++;
+    [self getData];
 }
 
 
 -(void)pullTableViewDidTriggerRefresh:(PullTableView *)pullTableView{
     NSLog(@"hello");
     NSLog(@"%@",pullTableView);
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    self.currentPage = 0;
+    [self getData];
 }
 
 -(void)refreshListDataBack{

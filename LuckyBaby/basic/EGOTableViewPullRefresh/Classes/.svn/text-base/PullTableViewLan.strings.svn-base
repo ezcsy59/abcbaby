@@ -1,0 +1,42 @@
+/* 
+  PullTableViewLan.strings
+  EGOTableViewPullRefreshDemo
+
+  Created by 陈希哲 on 13-7-15.
+
+*/
+
+/*
+ 改变原来的样式，改变部分代码，HJH，2014.03.29
+ */
+//"Pull down to refresh..."="下拉可以刷新...";
+//
+//"Release to refresh..."="松开即可刷新...";
+//
+//"Pull up to load more..."="上拉加载更多...";
+//
+//"Release to load more..."="释放加载更多...";
+
+"Pull down to refresh..."="下拉刷新...";
+
+"Release to refresh..."="松开即可刷新...";
+
+"Pull up to load more..."="上拉加载更多...";
+
+"Release to load more..."="释放加载更多...";
+
+/*****************************************/
+
+"Loading"="加载中...";
+
+"More"="更多";
+
+"LoadingMore"="加载更多中...";
+
+"Updated minute ago"="你在%@分钟前更新过";
+
+"Updated hour ago"="你在%@小时前更新过";
+
+"Updated day ago"="你在%@日前更新过";
+
+

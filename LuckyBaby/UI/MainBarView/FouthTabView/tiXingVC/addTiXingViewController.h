@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface addTiXingViewController : UIViewController
+@interface addTiXingViewController : FatherNavViewController
 
 @end

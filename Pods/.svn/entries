@@ -1,0 +1,96 @@
+10
+
+dir
+1392
+svn://huangjiahong@115.239.180.134:16690/babyapp/iosapp/LuckyBabyForSVN/Pods
+svn://huangjiahong@115.239.180.134:16690/babyapp
+
+
+
+2015-04-12T12:07:11.349192Z
+1392
+huangjiahong
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+56d04e74-c36b-4229-84a3-eba835c30c8f
+
+Pods.xcodeproj
+dir
+
+FSCalendar
+dir
+
+XMPPFramework
+dir
+
+
+
+delete
+
+CocoaLumberjack
+dir
+
+Qiniu
+dir
+
+Target Support Files
+dir
+
+CocoaAsyncSocket
+dir
+
+Headers
+dir
+
+Local Podspecs
+dir
+
+Manifest.lock
+file
+
+
+
+
+2015-04-12T12:32:15.000000Z
+23e1c6fc89552b7b0289a484b98d1feb
+2015-04-12T12:07:11.349192Z
+1392
+huangjiahong
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5805
+
+AFNetworking
+dir
+

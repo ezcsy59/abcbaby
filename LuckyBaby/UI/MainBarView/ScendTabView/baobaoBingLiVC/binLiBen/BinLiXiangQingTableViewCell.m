@@ -179,4 +179,8 @@
 -(void)pingLunBtnClick{
     [self.delegate2 pingLunBtnClickWithNumberIndexRow:self.numberIndexRow];
 }
+
+-(void)yinPinBtnClick{
+    [self.delegate2 yinPinBtnClickWithNumberIndexRow:self.numberIndexRow];
+}
 @end

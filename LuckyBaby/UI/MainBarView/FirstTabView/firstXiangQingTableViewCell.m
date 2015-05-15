@@ -17,6 +17,7 @@
 @property(nonatomic,strong)TQRichTextView *xiangQingLabel;
 @property(nonatomic,strong)HJHMyLabel *createdTimeLabel;
 @property(nonatomic,strong)HJHMyImageView *photoImage;
+@property(nonatomic,strong)HJHMyButton *yinPinBtn;
 @property(nonatomic,strong)HJHMyButton *pingLunBtn;
 @property(nonatomic,strong)HJHMyImageView *pingLunTextMainView;
 @property(nonatomic,strong)HJHMyImageView *footImageV;
@@ -27,6 +28,9 @@
 
 @property(nonatomic,strong)HJHMyLabel *leftTimeLabel;
 @property(nonatomic,strong)HJHMyLabel *leftTimeLabel2;
+
+
+@property(nonatomic,strong)NSString *voiceUrl;
 @end
 
 @implementation firstXiangQingTableViewCell
@@ -58,6 +62,8 @@
 }
 
 -(void)setMainView{
+    
+    
     self.bgImageView = [[HJHMyImageView alloc]init];
     self.bgImageView.contentMode = UIViewContentModeScaleToFill;
     self.bgImageView.backgroundColor = [UIColor whiteColor];
@@ -101,6 +107,11 @@
     self.createdTimeLabel.font = [UIFont systemFontOfSize:18];
     [self.bgImageView addSubview:self.createdTimeLabel];
     
+    self.yinPinBtn = [[HJHMyButton alloc]init];
+    [self.yinPinBtn setImage:[UIImage imageNamed:@"voice1"] forState:UIControlStateNormal];
+    [self.yinPinBtn addTarget:self action:@selector(yinPinBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.bgImageView addSubview:self.yinPinBtn];
+    
     
     self.pingLunBtn = [[HJHMyButton alloc]init];
     [self.pingLunBtn setImage:[UIImage imageNamed:@"edit1"] forState:UIControlStateNormal];
@@ -119,6 +130,7 @@
     self.leftLine.contentMode = UIViewContentModeScaleToFill;
     self.leftLine.backgroundColor = [UIColor lightGrayColor];
     [self addSubview:self.leftLine];
+    self.clipsToBounds=YES;
     
     //左竖线
     self.leftImage = [[HJHMyImageView alloc]init];
@@ -150,6 +162,9 @@
             NSDictionary *dict = [photoArray objectAtIndex:i];
             HJHMyButton *photoBtn = [[HJHMyButton alloc]init];
             photoBtn.frame = CGRectMake(100 * (i%2), 100 * (i/2), 95, 95);
+            if (!self.canShowBigPhoto) {
+                photoBtn.userInteractionEnabled = NO;
+            }
             [photoBtn setImageWithURL:[NSURL URLWithString:[DictionaryStringTool stringFromDictionary:dict forKey:@"imageThumbailUrl"]] placeholderImage:nil];
             [self.photoImage addSubview:photoBtn];
         }
@@ -187,8 +202,15 @@
     self.createdTimeLabel.text = [NSString stringWithFormat:@"%@:%@",create,timeStr];
     self.createdTimeLabel.frame = CGRectMake(10, self.xiangQingLabel.frame.size.height + self.xiangQingLabel.frame.origin.y + 10, 300, 20);
     
-    self.pingLunBtn.frame = CGRectMake(175, self.createdTimeLabel.frame.origin.y, 30, 30);
+    self.pingLunBtn.frame = CGRectMake(175, self.createdTimeLabel.frame.origin.y-7, 30, 30);
     
+    NSString *yinPinUrl = [DictionaryStringTool stringFromDictionary:dic forKey:@"voiceUrl"];
+    if ([yinPinUrl isKindOfClass:[NSString class]]) {
+        if (yinPinUrl.length > 0) {
+            self.yinPinBtn.frame = CGRectMake(140, self.createdTimeLabel.frame.origin.y, 30, 30);
+            self.voiceUrl = yinPinUrl;
+        }
+    }
     
     NSArray *commentArray = [DictionaryStringTool stringFromDictionary:dic forKey:@"commentList"];
     if ([commentArray isKindOfClass:[NSArray class]]) {
@@ -210,11 +232,11 @@
             mainTextView.userInteractionEnabled = NO;
             mainTextView.textColor = [UIColor colorWithHexString:@"666666"];
             mainTextView.lineSpacing = 0.1;
-            mainTextView.frame = CGRectMake(0, lastHeight + 5, 300, mainTextView.drawheigth);
+            mainTextView.frame = CGRectMake(0, lastHeight + 5, 200, mainTextView.drawheigth);
             lastHeight += mainTextView.drawheigth;
             [self.pingLunTextMainView addSubview:mainTextView];
         }
-        self.pingLunTextMainView.frame = CGRectMake(10, self.createdTimeLabel.frame.size.height + self.createdTimeLabel.frame.origin.y + 10, 190, lastHeight+ 5);
+        self.pingLunTextMainView.frame = CGRectMake(10, self.createdTimeLabel.frame.size.height + self.createdTimeLabel.frame.origin.y + 10, 230, lastHeight+ 5);
         self.pingLunTextMainView.backgroundColor = [UIColor whiteColor];
     }
     else{
@@ -224,8 +246,10 @@
     
     self.bgImageView.frame = CGRectMake(100, 5, 210, self.pingLunTextMainView.frame.size.height + self.pingLunTextMainView.frame.origin.y + 5);
     
-    self.leftLine.frame = CGRectMake(65, 0, 0.5, self.pingLunTextMainView.frame.size.height + self.pingLunTextMainView.frame.origin.y + 10);
+    self.leftLine.frame = CGRectMake(65, 0, 0.5, self.pingLunTextMainView.frame.size.height + self.pingLunTextMainView.frame.origin.y + 100);
     
+    //self.leftLine.frame = CGRectMake(65, 0, 0.5, self.frame.size.height);
+
     self.leftTimeLabel.text = [DictionaryStringTool stringFromDictionary:dic forKey:@"createdDatetime"];
     if (self.leftTimeLabel.text.length >= 3) {
         self.leftTimeLabel.text = [self.leftTimeLabel.text substringToIndex:self.leftTimeLabel.text.length - 3];
@@ -240,11 +264,15 @@
 
 -(float)getCellHeight:(NSDictionary *)dic{
     [self resetViewView:dic];
-    return self.footImageV.frame.origin.y + 1;
+    return self.footImageV.frame.origin.y + 25;
 }
 
 -(void)pingLunBtnClick{
     [self.delegate2 pingLunBtnClickWithNumberIndexRow:self.numberIndexRow];
 }
 
+-(void)yinPinBtnClick{
+    [self.delegate2 yinPinBtnClickWithNumberIndexRow:self.numberIndexRow];
+    
+}
 @end

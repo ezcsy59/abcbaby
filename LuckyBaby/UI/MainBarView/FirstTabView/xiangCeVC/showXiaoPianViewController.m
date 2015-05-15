@@ -13,19 +13,31 @@
 @interface showXiaoPianViewController ()<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>
 @property(nonatomic,strong)UITableView *_tableView;
 @property(nonatomic,strong)NSArray *photoArray;
+@property(nonatomic,strong)NSString *albumId;
+
+@property(nonatomic,assign)NSInteger currentPage;
 @end
 
 @implementation showXiaoPianViewController
 
--(instancetype)initWithBigPhotoUrlArray:(NSArray*)bPArray smallPhotoArray:(NSArray*)sPArray{
+-(instancetype)initWithStyle:(NSString *)albumId{
     if (self = [super init]) {
+        self.albumId = albumId;
     }
     return self;
 }
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    self.headNavView.titleLabel.text = @"宝宝所有照片";
+    if([self.albumId isEqualToString:@"10001"]){
+        self.headNavView.titleLabel.text = @"宝宝所有照片";
+    }
+    else if([self.albumId isEqualToString:@"10002"]){
+        self.headNavView.titleLabel.text = @"宝宝所有视频";
+    }
+    else{
+        self.headNavView.titleLabel.text = @"宝宝年度照片";
+    }
     self.view.backgroundColor = [UIColor colorWithHexString:@"#F1F1F1"];
     
     [self addLeftReturnBtn];
@@ -33,6 +45,7 @@
     
     [self setMainTableView];
     
+    self.currentPage = 0;
     [self getData];
     // Do any additional setup after loading the view.
 }
@@ -46,6 +59,9 @@
     self.navigationController.navigationBar.hidden = YES;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getAllPhotosSuccess:) name:@"getAllPhotosSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getAllPhotosFail:) name:@"getAllPhotosFail" object:nil];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getAlbumPhotoListSuccess:) name:@"getAlbumPhotoListSuccess" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getAlbumPhotoListFail:) name:@"getAlbumPhotoListFail" object:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -66,10 +82,31 @@
     
 }
 
+-(void)getAlbumPhotoListSuccess:(NSNotification*)noti{
+    NSDictionary *dic = [noti object];
+    NSArray *arr = [dic objectForKey:@"data"];
+    if ([arr isKindOfClass:[NSArray class]]) {
+        self.photoArray = arr;
+    }
+    [self._tableView reloadData];
+}
+
+-(void)getAlbumPhotoListFail:(NSNotification*)noti{
+    
+}
+
 -(void)getData{
     NSDictionary *dic = [plistDataManager getDataWithKey:@"user_loginList.plist"];
     dongtaiNetWork *dongN = [[dongtaiNetWork alloc]init];
-    [dongN getAllPhotosWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] page:@"0" size:@"20"];
+    if ([self.albumId isEqualToString:@"10001"]) {
+        [dongN getAllPhotosWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] page:[NSString stringWithFormat:@"%d",self.currentPage] pageSize:@"20"];
+    }
+    else if([self.albumId isEqualToString:@"10002"]){
+        
+    }
+    else{
+        [dongN getAlbumPhotoListWithAlbumId:self.albumId page:[NSString stringWithFormat:@"%d",self.currentPage] pageSize:@"20"];
+    }
 }
 
 -(void)setMainTableView{
@@ -133,7 +170,7 @@
 
 #pragma mark - btnClick
 -(void)photoBtnClick:(HJHMyButton*)btn{
-    showBigPhotoViewController *sBPVC = [[showBigPhotoViewController alloc]initWithPhotoA:(self.photoArray) andTab:btn.tag isLocationPhoto:NO];
+    showBigPhotoViewController *sBPVC = [[showBigPhotoViewController alloc]initWithPhotoA:(self.photoArray) andTab:btn.tag isLocationPhoto:NO isClassShow:NO];
     [self.navigationController pushViewController:sBPVC animated:YES];
 }
 /*

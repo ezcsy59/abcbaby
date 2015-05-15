@@ -1,0 +1,35 @@
+//
+//  TimeChange.m
+//  LuckyBaby
+//
+//  Created by 黄嘉宏 on 15-4-4.
+//  Copyright (c) 2015年 黄嘉宏. All rights reserved.
+//
+
+#import "TimeChange.h"
+
+@implementation TimeChange
++(NSString*)timeChage:(NSString*)time{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    
+    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSinceNow:[time integerValue]];
+    NSLog(@"1296035591  = %@",confromTimesp);
+    NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
+    NSLog(@"confromTimespStr =  %@",confromTimespStr);
+    
+    return confromTimespStr;
+}
+
++(NSString*)timeChage2:(NSString*)time{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    [formatter setDateFormat:@"YYYY-MM-dd"];
+    NSDate *datenow = [NSDate date];//现在时间,你可以输出来看下是什么格式
+    NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[datenow timeIntervalSince1970]];
+    return timeSp;
+}
+@end

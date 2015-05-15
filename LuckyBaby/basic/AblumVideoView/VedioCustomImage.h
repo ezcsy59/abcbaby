@@ -14,7 +14,7 @@
     BOOL isSelected;
 }
 @property(strong,nonatomic)ALAsset* asset;
-@property(strong,nonatomic)NSString *photoUrl;
+@property(strong,nonatomic)NSURL *photoUrl;
 @property(strong,nonatomic)NSString *groundDataString;
 @property BOOL isSelected;
 @end

@@ -9,15 +9,19 @@
 #import "tiXingViewController.h"
 #import "LoginNetWork.h"
 #import "TQRichTextView.h"
+#import "addTiXingViewController.h"
 
 @interface tiXingViewController ()<PullTableViewDelegate,UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>
 @property(nonatomic,strong)PullTableView *_tableView;
-@property(nonatomic,strong)NSArray *tiXingListArray;
+@property(nonatomic,strong)NSMutableArray *tiXingListArray;
+
+@property(nonatomic,assign)NSInteger currentPage;
 @end
 
 @implementation tiXingViewController
 
 -(void)viewWillAppear:(BOOL)animated{
+    self.currentPage = 0;
     [self getData];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listAlertSuccess:) name:@"listAlertSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listAlertFail:) name:@"listAlertFail" object:nil];
@@ -30,25 +34,43 @@
 #pragma mark -logic data
 -(void)getData{
     LoginNetWork *loginN = [[LoginNetWork alloc]init];
-    [loginN listAlertWithPage:@"0" pageSize:@"10"];
+    [loginN listAlertWithPage:[NSString stringWithFormat:@"%d",self.currentPage] pageSize:@"10"];
 }
 
 -(void)listAlertSuccess:(NSNotification*)noti{
     NSDictionary *dic = [noti object];
     NSArray *array = [dic objectForKey:@"data"];
     if ([array isKindOfClass:[NSArray class]]) {
-        self.tiXingListArray = array;
+        if (self.currentPage == 0) {
+            self.tiXingListArray = [[NSMutableArray alloc]initWithArray:array];
+        }
+        else{
+            for (NSDictionary *dic in array) {
+                [self.tiXingListArray addObject:dic];
+            }
+        }
+    }
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
     }
     [self._tableView reloadData];
 }
 
 -(void)listAlertFail:(NSNotification*)noti{
-    
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.tiXingListArray = [NSArray array];
+    self.tiXingListArray = [NSMutableArray array];
     
     self.headNavView.titleLabel.text = @"提醒";
     self.view.backgroundColor = [UIColor colorWithHexString:@"#F1F1F1"];
@@ -60,7 +82,7 @@
     
     [self addRigthBtn];
     [self.rigthBtn setTitle:@"添加" forState:UIControlStateNormal];
-    [self.rigthBtn addTarget:self action:@selector(addData:) forControlEvents:UIControlEventTouchUpInside];
+    [self.rigthBtn addTarget:self action:@selector(addData) forControlEvents:UIControlEventTouchUpInside];
     
 
     [self setMainTableView];
@@ -157,19 +179,26 @@
     
 }
 
+#pragma mark - btnClick
+-(void)addData{
+    addTiXingViewController *aVC = [[addTiXingViewController alloc]init];
+    [self.navigationController pushViewController:aVC animated:YES];
+}
 
 #pragma mark - pullTableViewDelegate
-
-
 -(void)pullTableViewDidTriggerLoadMore:(PullTableView *)pullTableView{
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    self.currentPage ++;
+    [self getData];
 }
 
 
 -(void)pullTableViewDidTriggerRefresh:(PullTableView *)pullTableView{
     NSLog(@"hello");
     NSLog(@"%@",pullTableView);
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    self.currentPage = 0;
+    [self getData];
 }
 
 -(void)refreshListDataBack{

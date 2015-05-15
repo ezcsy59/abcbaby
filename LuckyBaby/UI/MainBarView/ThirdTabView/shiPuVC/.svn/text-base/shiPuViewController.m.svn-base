@@ -1,0 +1,53 @@
+//
+//  shiPuViewController.m
+//  LuckyBaby
+//
+//  Created by 黄嘉宏 on 15-4-6.
+//  Copyright (c) 2015年 黄嘉宏. All rights reserved.
+//
+
+#import "shiPuViewController.h"
+#import "SY_DateViewController.h"
+
+@interface shiPuViewController ()
+
+@end
+
+@implementation shiPuViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.headNavView.titleLabel.text = @"食谱";
+    self.view.backgroundColor = [UIColor colorWithHexString:@"#F1F1F1"];
+    
+    [self addLeftReturnBtn];
+    [self.leftBtn setTitle:@"返回" forState:UIControlStateNormal];
+    
+    [self setMainView];
+    // Do any additional setup after loading the view.
+}
+
+-(void)setMainView{
+    SY_DateViewController *sDateVC = [[SY_DateViewController alloc]init];
+    sDateVC.view.frame = CGRectMake(0, [self getNavHight], 320, (iPhone5?568:480) - [self getNavHight]);
+    [self.view addSubview:sDateVC.view];
+    [self addChildViewController:sDateVC];
+
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

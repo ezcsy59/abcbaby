@@ -21,6 +21,10 @@
 @property(nonatomic,strong)HJHMyImageView *redPoint;
 @property(nonatomic,strong)HJHMyImageView *redPoint2;
 
+//横线
+@property(nonatomic,strong)HJHMyImageView *grayline;
+
+
 @property(nonatomic,strong)UIViewController *currentViewController;
 @end
 
@@ -49,11 +53,17 @@
     [self setTabBar];
     [self choseView:0];
     
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeClassName:) name:@"changeClassName" object:nil];
+    
     
     // Do any additional setup after loading the view.
 }
 
-//重设做饭会键，隐藏改键，覆盖父类方法即可
+-(void)changeClassName:(NSNotification*)noti{
+    self.headNavView.titleLabel.text = [noti object];
+}
+
+//重设做返回键，隐藏改键，覆盖父类方法即可
 -(void)addLeftReturnBtn
 {
     CGRect backBtnFrame;
@@ -114,14 +124,14 @@
     for (int i = 0; i < 4; i++) {
         HJHMyButton * tabButton = [[HJHMyButton alloc]init];
         if (i == 0) {
-            tabButton.frame = CGRectMake(0, 0, 64, 60);
+            tabButton.frame = CGRectMake(0, -5, 64, 60);
         }
         
         if(i == 1){
-            tabButton.frame = CGRectMake(i*64, 0, 64, 60);
+            tabButton.frame = CGRectMake(i*64, -5, 64, 60);
         }
         else if(i >= 2){
-            tabButton.frame = CGRectMake((i+1)*64, 0, 64, 60);
+            tabButton.frame = CGRectMake((i+1)*64+10, -5, 64, 60);
         }
         
         tabButton.clipsToBounds = NO;
@@ -159,10 +169,16 @@
     }
     
     HJHMyButton *BarAddBtn = [[HJHMyButton alloc]init];
-    BarAddBtn.frame = CGRectMake(64*2 + 2, 0, 60, 60);
+    BarAddBtn.frame = CGRectMake(64*2 + 8, 5, 50, 50);
     [BarAddBtn setImage:[UIImage imageNamed:@"2.png"] forState:UIControlStateNormal];
     [BarAddBtn addTarget:self action:@selector(addShiJianBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.tabBarImageView addSubview:BarAddBtn];
+    
+    self.grayline = [[HJHMyImageView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, 0.5)];
+    self.grayline.backgroundColor=[UIColor lightGrayColor];
+    [self.tabBarImageView addSubview:self.grayline];
+    
+    
 }
 
 -(void)setMainView{
@@ -187,6 +203,8 @@
 -(void)choseView:(NSInteger)page{
     self.currentTab = page;
     self.rigthBtn.tag = page;
+    
+    NSDictionary *dic = [plistDataManager getDataWithKey:user_loginList];
     NSLog(@"%@",self.tabBarImageView.subviews);
     for (id img in self.tabBarImageView.subviews) {
         if ([img isKindOfClass:[UIButton class]]) {
@@ -204,19 +222,18 @@
         {
             [self.currentViewController.view removeFromSuperview];
             self.currentViewController = nil;
-            //            if (!self.firstTabVC) {
+                       if (!self.firstTabVC) {
             self.firstTabVC = [[FirstTabViewController alloc]init];
-            //            }
+                        }
             [self addChildViewController:self.firstTabVC];
             self.firstTabVC.view.frame = CGRectMake(0, 0, ScreenHeigth, ScreenHeigth - [self getNavHight] - 45);
             self.currentViewController = self.firstTabVC;
             [self.mainImageView addSubview:self.firstTabVC.view];
-            
-            //[self.mainImageView bringSubviewToFront:self.firstTabVC.view];
-            self.headNavView.titleLabel.text = @"动态";
+
+//            self.headNavView.titleLabel.text = @"动态";
+            self.headNavView.titleLabel.text = [DictionaryStringTool stringFromDictionary:dic forKey:@"childNicknameFamilyCurrent"];
             UIImage *image = [UIImage imageNamed:@"icon_info_white.png"];
             UIImage *image2 = [UIImage imageNamed:@"back_press.png"];
-            //[self.rigthBtn setImageEdgeInsets:UIEdgeInsetsMake(15, 0, 15, 30)];
             [self.rigthBtn setImage:image forState:UIControlStateNormal];
             [self.rigthBtn setImage:image2 forState:UIControlStateHighlighted];
             [self.rigthBtn setTitle:@"" forState:UIControlStateNormal];
@@ -236,7 +253,8 @@
             [self.mainImageView addSubview:self.secondTabVC.view];
             
             //[self.mainImageView bringSubviewToFront:self.secondTabVC.view];
-            self.headNavView.titleLabel.text = @"健康";
+//            self.headNavView.titleLabel.text = @"健康";
+            self.headNavView.titleLabel.text = [DictionaryStringTool stringFromDictionary:dic forKey:@"childNicknameFamilyCurrent"];
             //            UIImage *image = [UIImage imageNamed:@""];
             //            UIImage *image2 = [UIImage imageNamed:@""];
             //            //[self.rigthBtn setImageEdgeInsets:UIEdgeInsetsMake(15, 0, 15, 30)];
@@ -354,6 +372,10 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 @end
 

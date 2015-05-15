@@ -19,6 +19,8 @@
 @property(nonatomic,strong)NSArray *yearXiangCeArray;
 @property(nonatomic,strong)KGSelectView *SView;
 @property(nonatomic,strong)UIImagePickerController* Videopicker;
+
+@property(nonatomic,assign)NSInteger currentPage;
 @end
 
 @implementation xiangCeViewController
@@ -43,7 +45,7 @@
     NSDictionary *dic = [plistDataManager getDataWithKey:@"user_loginList.plist"];
     dongtaiNetWork *dongtaiNetWork1 = [[dongtaiNetWork alloc]init];
     [dongtaiNetWork1 getAllAlbumWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"]];
-    [dongtaiNetWork1 getAlbumListWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] page:@"0" size:@"10"];
+    [dongtaiNetWork1 getAlbumListWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] page:[NSString stringWithFormat:@"%d",self.currentPage] pageSize:@"10"];
 }
 
 -(void)getAllAlbumSuccess:(NSNotification*)noti{
@@ -84,6 +86,7 @@
     [self.rigthBtn setTitle:@"更多" forState:UIControlStateNormal];
     [self.rigthBtn addTarget:self action:@selector(addVP) forControlEvents:UIControlEventTouchUpInside];
     [self setMainTableView];
+    self.currentPage = 0;
     [self getData];
     //    [self setMainTableView];
     // Do any additional setup after loading the view.
@@ -107,8 +110,30 @@
 #pragma mark - tableViewDelegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    if (self.yearXiangCeArray.count > 0) {
+        return self.yearXiangCeArray.count + 1;
+    }
     // Return the number of sections.
     return 1;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    if (section > self.yearXiangCeArray.count) {
+        return 0;
+    }
+    return 0;
+}
+
+/*设置标题头的名称*/
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (section > 0) {
+        NSDictionary *dic = [self.yearXiangCeArray objectAtIndex:section - 1];
+        return [DictionaryStringTool stringFromDictionary:dic forKey:@"year"];
+    }
+    return @"";
+    
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -116,7 +141,7 @@
     if (section == 0) {
         return self.allXiangCeArray.count;
     }
-    if (section == 1) {
+    if (section >= 1) {
         return self.yearXiangCeArray.count;
     }
     // Return the number of rows in the section.
@@ -130,7 +155,7 @@
     if (!cell) {
         cell = [[xiangCeTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; 
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     if (indexPath.section == 0) {
         xiangCeTableViewCell *qCell = (xiangCeTableViewCell*)cell;
         NSDictionary *dic = [self.allXiangCeArray objectAtIndex:indexPath.row];
@@ -145,11 +170,14 @@
         qCell.leftLabel3.hidden = YES;
         qCell.leftLabel4.hidden = YES;
     }
-    if (indexPath.section == 1) {
+    
+    if (indexPath.section >= 1) {
         xiangCeTableViewCell *qCell = (xiangCeTableViewCell*)cell;
-        NSDictionary *dic = [self.yearXiangCeArray objectAtIndex:indexPath.row];
-        [qCell.leftImage setImageWithURL:[NSURL URLWithString:[DictionaryStringTool stringFromDictionary:dic forKey:@"coverImageUrl"]] placeholderImage:[UIImage imageNamed:@"ic_picture_loading.png"]];
-        qCell.leftLabel1.text = @"所有相片";
+        NSDictionary *dic = [self.yearXiangCeArray objectAtIndex:indexPath.section - 1];
+        NSArray *dictArr = [DictionaryStringTool stringFromDictionary:dic forKey:@"albumList"];
+        NSDictionary *dict = [dictArr objectAtIndex:0];
+        [qCell.leftImage setImageWithURL:[NSURL URLWithString:[DictionaryStringTool stringFromDictionary:dict forKey:@"photoUrl"]] placeholderImage:[UIImage imageNamed:@"ic_picture_loading.png"]];
+        qCell.leftLabel1.text = @"年度相片";
         qCell.leftLabel2.hidden = YES;
         qCell.leftLabel3.hidden = YES;
         qCell.leftLabel4.hidden = YES;
@@ -163,8 +191,19 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row == 0) {
-        showXiaoPianViewController *sVC = [[showXiaoPianViewController alloc]init];
+    if (indexPath.row == 0 && indexPath.section == 0) {
+        showXiaoPianViewController *sVC = [[showXiaoPianViewController alloc]initWithStyle:@"10001"];
+        [self.navigationController pushViewController:sVC animated:YES];
+    }
+    if (indexPath.row == 1 && indexPath.section == 0) {
+        showXiaoPianViewController *sVC = [[showXiaoPianViewController alloc]initWithStyle:@"10002"];
+        [self.navigationController pushViewController:sVC animated:YES];
+    }
+    if (indexPath.section > 0) {
+        NSDictionary *dic = [self.yearXiangCeArray objectAtIndex:indexPath.section - 1];
+        NSArray *dictArr = [DictionaryStringTool stringFromDictionary:dic forKey:@"albumList"];
+        NSDictionary *dict = [dictArr objectAtIndex:0];
+        showXiaoPianViewController *sVC = [[showXiaoPianViewController alloc]initWithStyle:[DictionaryStringTool stringFromDictionary:dict forKey:@"albumId"]];
         [self.navigationController pushViewController:sVC animated:YES];
     }
 }
@@ -179,20 +218,20 @@
 #pragma mark - KGSelectViewDelegate
 -(void)selectBtnClick:(int)tag{
     if (tag == 0) {
-//        VedioGetPhotoViewController *vc = [[VedioGetPhotoViewController alloc]initWithStyle:1];
-//        [vc maxPhotoCanChose:5];
-//        //计算又多少张图片
-//        [vc maxPhotoCanChose2:5];
-//        vc.delegate2 = self;
-//        vc.photoNumber = 0;
-//        [self.navigationController pushViewController:vc animated:YES];
-        UIImagePickerController* picker = [[UIImagePickerController alloc] init];
-        picker.delegate = self;
-        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        picker.mediaTypes =  [[NSArray alloc] initWithObjects: (NSString *) kUTTypeMovie, nil];
-        
-        //打开摄像画面作为背景
-        [self presentViewController:picker animated:YES completion:nil];
+        VedioGetPhotoViewController *vc = [[VedioGetPhotoViewController alloc]initWithStyle:1];
+        [vc maxPhotoCanChose:5];
+        //计算又多少张图片
+        [vc maxPhotoCanChose2:5];
+        vc.delegate2 = self;
+        vc.photoNumber = 0;
+        [self.navigationController pushViewController:vc animated:YES];
+        //        UIImagePickerController* picker = [[UIImagePickerController alloc] init];
+        //        picker.delegate = self;
+        //        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        //        picker.mediaTypes =  [[NSArray alloc] initWithObjects: (NSString *) kUTTypeMovie, nil];
+        //
+        //        //打开摄像画面作为背景
+        //        [self presentViewController:picker animated:YES completion:nil];
     }
     else if (tag == 1){
         /*
@@ -209,7 +248,6 @@
     [self.SView removeFromSuperview];
     self.SView = nil;
 }
-
 
 -(void)cancalSelectClicked{
     [self.SView removeFromSuperview];

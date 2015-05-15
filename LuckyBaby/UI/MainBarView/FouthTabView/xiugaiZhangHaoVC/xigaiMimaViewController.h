@@ -11,4 +11,5 @@
 @interface xigaiMimaViewController : FatherNavViewController<KGSelectViewDelegate>
 @property(nonatomic,copy)NSString *parentName;
 
+-(instancetype)initWithStyle:(int)style;
 @end

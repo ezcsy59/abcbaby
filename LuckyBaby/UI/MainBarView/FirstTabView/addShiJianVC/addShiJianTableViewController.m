@@ -388,7 +388,7 @@
         [sheet show];
     }
     else{
-        showBigPhotoViewController *sBPVC = [[showBigPhotoViewController alloc]initWithPhotoA:(self.photoBigImageArray) andTab:btn.tag%1000 isLocationPhoto:YES];
+        showBigPhotoViewController *sBPVC = [[showBigPhotoViewController alloc]initWithPhotoA:(self.photoBigImageArray) andTab:btn.tag%1000 isLocationPhoto:YES isClassShow:NO];
         [self.navigationController pushViewController:sBPVC animated:YES];
     }
 }
@@ -461,6 +461,48 @@
     }
 }
 
+#pragma mark - imagePickerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
+    NSURL *videoString = [info objectForKey:UIImagePickerControllerMediaURL];
+    //把相片存储到相机的相册中
+    //UIImageWriteToSavedPhotosAlbum(image, nil, nil,nil);
+    
+    if (image) {
+        
+    }
+    else{
+        UIImage *image = [self thumbnailImageForVideo:videoString atTime:0];
+        [self.videoBtn setImage:image forState:UIControlStateNormal];
+    }
+    
+    
+    
+    [picker dismissViewControllerAnimated:YES completion:^{}];
+}
+
+- (UIImage*) thumbnailImageForVideo:(NSURL *)videoURL atTime:(NSTimeInterval)time {
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
+    NSParameterAssert(asset);
+    AVAssetImageGenerator *assetImageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    assetImageGenerator.appliesPreferredTrackTransform = YES;
+    assetImageGenerator.apertureMode = AVAssetImageGeneratorApertureModeEncodedPixels;
+    
+    CGImageRef thumbnailImageRef = NULL;
+    CFTimeInterval thumbnailImageTime = time;
+    NSError *thumbnailImageGenerationError = nil;
+    thumbnailImageRef = [assetImageGenerator copyCGImageAtTime:CMTimeMake(thumbnailImageTime, 60) actualTime:NULL error:&thumbnailImageGenerationError];
+    
+    if (!thumbnailImageRef)
+        NSLog(@"thumbnailImageGenerationError %@", thumbnailImageGenerationError);
+    
+    UIImage *thumbnailImage = thumbnailImageRef ? [[UIImage alloc] initWithCGImage:thumbnailImageRef] : nil;
+    
+    return thumbnailImage;
+}
+
 #pragma mark - KGActionSheet delegate
 -(BOOL)KGActionSheet:(KGActionSheet *)sheet willDissmissWithButtonIndex:(NSInteger)index{
     if (index == 1) {
@@ -483,35 +525,6 @@
     }
     return YES;
 }
-
-#pragma mark - image picker delegate
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
-    NSString *mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
-    //把相片存储到相机的相册中
-    //UIImageWriteToSavedPhotosAlbum(image, nil, nil,nil);
-    //[self.videoBtn setImageWithURL:[NSURL URLWithString:mediaURL] placeholderImage:[UIImage imageNamed:@"video_record"]];
-    self.medioURL = mediaURL;
-    
-//    NSMutableArray *array = [NSMutableArray array];
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        ALAssetsLibraryGroupsEnumerationResultsBlock listGroupBlock = ^(ALAssetsGroup *group, BOOL *stop) {
-//            [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-//                [obj enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
-//                    if ([result thumbnail] != nil) {
-//                        // 视频
-//                        if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ){
-//                            NSLog(@"%@",result);
-//                            // 和图片方法类似
-//                        }
-//                    }
-//                }];
-//            }];
-//        };
-//    });
-    [picker dismissViewControllerAnimated:YES completion:^{}];
-}
-
 
 #pragma mark - HJHPickerViewDelegate
 -(void)hjhGetDifang:(NSString*)area{

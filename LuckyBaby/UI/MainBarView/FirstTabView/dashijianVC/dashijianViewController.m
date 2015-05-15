@@ -17,12 +17,16 @@
 @property(nonatomic,strong)PullTableView *_tableView;
 @property(nonatomic,strong)NSString *currentIndexrow;
 @property(nonatomic,strong)NSString *currentMessage;
+
+@property(nonatomic,assign)NSInteger currentPage;
 @end
 
 @implementation dashijianViewController
 
 -(void)viewWillAppear:(BOOL)animated{
+    self.currentPage = 0;
     [self getData];
+    self.daShiJianArray = [NSMutableArray array];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getStoryFirstListSuccess:) name:@"getStoryFirstListSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getStoryFirstListFail:) name:@"getStoryFirstListFail" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveStoryCommentSuccess:) name:@"saveStoryCommentSuccess" object:nil];
@@ -34,10 +38,9 @@
 }
 
 -(void)getData{
-    self.daShiJianArray = [NSMutableArray array];
     dongtaiNetWork *donT = [[dongtaiNetWork alloc]init];
     NSDictionary *dic = [plistDataManager getDataWithKey:user_loginList];
-    [donT getStoryFirstListWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] page:@"0" pageSize:@"10"];
+    [donT getStoryFirstListWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] page:[NSString stringWithFormat:@"%d",self.currentPage] pageSize:@"10"];
 }
 
 -(void)saveStoryCommentSuccess:(NSNotification*)noti{
@@ -53,7 +56,16 @@
     NSDictionary *dic = [noti object];
     NSArray *array = [dic objectForKey:@"data"];
     if ([array isKindOfClass:[NSArray class]]) {
-        self.daShiJianArray = [[NSMutableArray alloc]initWithArray:array];
+        if ([array isKindOfClass:[NSArray class]]) {
+            if (self.currentPage == 0) {
+                self.daShiJianArray = [[NSMutableArray alloc]initWithArray:array];
+            }
+            else{
+                for (NSDictionary *dic in array) {
+                    [self.daShiJianArray addObject:dic];
+                }
+            }
+        }
     }
     
     //把［察汗］系列变成［p6］系列
@@ -81,11 +93,22 @@
         [self.daShiJianArray replaceObjectAtIndex:i withObject:dcit];
     }
     //************************
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
     [self._tableView reloadData];
 }
 
 -(void)getStoryFirstListFail:(NSNotification*)noti{
-    
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
 }
 
 - (void)viewDidLoad {
@@ -133,6 +156,8 @@
     for (UIView *view in cell.subviews) {
         [view removeFromSuperview];
     }
+    [cell removeFromSuperview];
+    cell = nil;
     cell = [[DaShiJianTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; 
     DaShiJianTableViewCell *qCell = (DaShiJianTableViewCell*)cell;
@@ -185,6 +210,14 @@
     [self showKeyboard];
 }
 
+-(void)yinPinBtnClickWithNumberIndexRow:(NSString *)numberIndexRow{
+    //    self.currentIndexrow = numberIndexRow;
+    //    [self showKeyboard];
+    AvaPlayer *player = [AvaPlayer sharedManager];
+    NSDictionary *dic = [self.daShiJianArray objectAtIndex:[numberIndexRow integerValue]];
+    [player playWithUrl:[DictionaryStringTool stringFromDictionary:dic forKey:@"voiceUrl"]];
+}
+
 #pragma mark - sendMessageDelegate
 -(void)postMessage:(NSString *)message{
     self.currentMessage = message;
@@ -228,17 +261,19 @@
 }
 
 #pragma mark - pullTableViewDelegate
-
-
 -(void)pullTableViewDidTriggerLoadMore:(PullTableView *)pullTableView{
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    self.currentPage ++;
+    [self getData];
 }
 
 
 -(void)pullTableViewDidTriggerRefresh:(PullTableView *)pullTableView{
     NSLog(@"hello");
     NSLog(@"%@",pullTableView);
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    self.currentPage = 0;
+    [self getData];
 }
 
 -(void)refreshListDataBack{

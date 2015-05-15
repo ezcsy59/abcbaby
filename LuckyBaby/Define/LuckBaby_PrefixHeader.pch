@@ -43,6 +43,7 @@
 #import "emojiStringChange.h"
 #import "HJHCurrentUser.h"
 #import "EaseMob.h"
+#import "AvaPlayer.h"
 
 //系统高度
 #define ScreenHeigth self.view.frame.size.height
@@ -62,7 +63,7 @@
 #define ShuoShuoPath [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0]
 
 //测试地址
-#define serverAPIAddress @"http://120.25.209.156:16980"
+#define serverAPIAddress @"http://app.gzybkj.com:16980"
 
 //七牛地址
 #define qiniuAdrress @"http://childmanager.qiniudn.com"

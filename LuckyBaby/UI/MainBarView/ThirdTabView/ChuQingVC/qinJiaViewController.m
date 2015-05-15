@@ -11,12 +11,15 @@
 
 @interface qinJiaViewController ()<PullTableViewDelegate,UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>
 @property(nonatomic,strong)PullTableView *_tableView;
-@property(nonatomic,strong)NSArray *qingjiaListArray;
+@property(nonatomic,strong)NSMutableArray *qingjiaListArray;
+
+@property(nonatomic,assign)NSInteger currentPage;
 @end
 
 @implementation qinJiaViewController
 
 -(void)viewWillAppear:(BOOL)animated{
+    self.currentPage = 0;
     [self getData];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listDutyOffApplySuccess:) name:@"listDutyOffApplySuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listDutyOffApplyFail:) name:@"listDutyOffApplyFail" object:nil];
@@ -30,25 +33,45 @@
 -(void)getData{
     youErYuanNetWork *youE = [[youErYuanNetWork alloc]init];
     NSDictionary *dic = [plistDataManager getDataWithKey:user_playformList];
-    [youE listDutyOffApplyWithChildIdPlatform:[DictionaryStringTool stringFromDictionary:dic forKey:@"childId"] classId:[DictionaryStringTool stringFromDictionary:dic forKey:@"classId"] page:@"0" pageSize:@"10"];
+    [youE listDutyOffApplyWithChildIdPlatform:[DictionaryStringTool stringFromDictionary:dic forKey:@"childId"] classId:[DictionaryStringTool stringFromDictionary:dic forKey:@"classId"] page:[NSString stringWithFormat:@"%d",self.currentPage] pageSize:@"10"];
 }
 
 -(void)listDutyOffApplySuccess:(NSNotification*)noti{
     NSDictionary *dic = [noti object];
     NSArray *array = [dic objectForKey:@"data"];
     if([array isKindOfClass:[NSArray class]]){
-        self.qingjiaListArray = array;
+        if ([array isKindOfClass:[NSArray class]]) {
+            if (self.currentPage == 0) {
+                self.qingjiaListArray = [[NSMutableArray alloc]initWithArray:array];
+            }
+            else{
+                for (NSDictionary *dic in array) {
+                    [self.qingjiaListArray addObject:dic];
+                }
+            }
+        }
+    }
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
     }
     [self._tableView reloadData];
 }
 
 -(void)listDutyOffApplyFail:(NSNotification*)noti{
-    
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.qingjiaListArray = [NSArray array];
+    self.qingjiaListArray = [NSMutableArray array];
     
     [self setMainTableView];
     // Do any additional setup after loading the view.
@@ -139,17 +162,19 @@
 
 
 #pragma mark - pullTableViewDelegate
-
-
 -(void)pullTableViewDidTriggerLoadMore:(PullTableView *)pullTableView{
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    self.currentPage ++;
+    [self getData];
 }
 
 
 -(void)pullTableViewDidTriggerRefresh:(PullTableView *)pullTableView{
     NSLog(@"hello");
     NSLog(@"%@",pullTableView);
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    self.currentPage = 0;
+    [self getData];
 }
 
 -(void)refreshListDataBack{

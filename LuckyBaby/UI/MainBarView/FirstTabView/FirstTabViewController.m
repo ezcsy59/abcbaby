@@ -27,6 +27,8 @@
 
 @property(nonatomic,strong)NSMutableArray *fisrtXiangQingArray;
 
+@property(nonatomic,assign)NSInteger currentPage;
+
 @end
 
 @implementation FirstTabViewController
@@ -41,7 +43,6 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    [self getData];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getStoryListSuccess:) name:@"getStoryListSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getStoryListFail:) name:@"getStoryListFail" object:nil];
     
@@ -54,10 +55,9 @@
 }
 
 -(void)getData{
-    self.fisrtXiangQingArray = [NSMutableArray array];
     dongtaiNetWork *donT = [[dongtaiNetWork alloc]init];
     NSDictionary *dic = [plistDataManager getDataWithKey:user_loginList];
-    [donT getStoryListWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] page:@"0" pageSize:@"10"];
+    [donT getStoryListWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] page:[NSString stringWithFormat:@"%d",self.currentPage] pageSize:@"10"];
 }
 
 #pragma mark -logic data
@@ -65,7 +65,16 @@
     NSDictionary *dic = [noti object];
     NSArray *array = [dic objectForKey:@"data"];
     if ([array isKindOfClass:[NSArray class]]) {
-        self.fisrtXiangQingArray = [[NSMutableArray alloc]initWithArray:array];
+        if ([array isKindOfClass:[NSArray class]]) {
+            if (self.currentPage == 0) {
+                self.fisrtXiangQingArray = [[NSMutableArray alloc]initWithArray:array];
+            }
+            else{
+                for (NSDictionary *dic in array) {
+                    [self.fisrtXiangQingArray addObject:dic];
+                }
+            }
+        }
     }
     
     //把［察汗］系列变成［p6］系列
@@ -93,11 +102,22 @@
         [self.fisrtXiangQingArray replaceObjectAtIndex:i withObject:dcit];
     }
     //************************
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
     [self._tableView reloadData];
 }
 
 -(void)getStoryListFail:(NSNotification*)noti{
-    
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
 }
 
 -(void)saveStoryCommentSuccess:(NSNotification*)noti{
@@ -114,6 +134,13 @@
     [super viewDidLoad];
     [self setMainImageView];
     [self setMainTableView];
+    
+    
+    
+    self.currentPage = 0;
+    [self getData];
+    self.fisrtXiangQingArray = [NSMutableArray array];
+   
     // Do any additional setup after loading the view.
 }
 
@@ -135,7 +162,11 @@
 -(void)setMainImageView{
     self.mainImageView = [[HJHMyImageView alloc]init];
     self.mainImageView.frame = CGRectMake(0, 0, ScreenWidth, 198 + 60);
-    self.mainImageView.image = [UIImage imageNamed:@"mybaby_top_bg.png"];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(gotoXiangCe)];
+    [self.mainImageView addGestureRecognizer:tap];
+    
+    NSDictionary *dic = [plistDataManager getDataWithKey:user_loginList];
+    [self.mainImageView setImageWithURL:[NSURL URLWithString:[DictionaryStringTool stringFromDictionary:dic forKey:@"childCoverUrl"]] placeholderImage:[UIImage imageNamed:@"mybaby_top_bg.png"]];
     
     for (int i = 0; i < 4; i++) {
         HJHMyButton *btn = [[HJHMyButton alloc]init];
@@ -260,6 +291,8 @@
     for (UIView *view in cell.subviews) {
         [view removeFromSuperview];
     }
+    [cell removeFromSuperview];
+    cell = nil;
     cell = [[firstXiangQingTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     firstXiangQingTableViewCell *qCell = (firstXiangQingTableViewCell*)cell;
@@ -309,10 +342,23 @@
     });
 }
 
+-(void)gotoXiangCe{
+    xiangCeViewController *xiangC = [[xiangCeViewController alloc]init];
+    [self.navigationController pushViewController:xiangC animated:YES];
+}
+
 #pragma mark -firstXiangQingDelegate
 -(void)pingLunBtnClickWithNumberIndexRow:(NSString *)numberIndexRow{
     self.currentIndexrow = numberIndexRow;
     [self showKeyboard];
+}
+
+-(void)yinPinBtnClickWithNumberIndexRow:(NSString *)numberIndexRow{
+//    self.currentIndexrow = numberIndexRow;
+//    [self showKeyboard];
+    AvaPlayer *player = [AvaPlayer sharedManager];
+    NSDictionary *dic = [self.fisrtXiangQingArray objectAtIndex:[numberIndexRow integerValue]];
+    [player playWithUrl:[DictionaryStringTool stringFromDictionary:dic forKey:@"voiceUrl"]];
 }
 
 #pragma mark - sendMessageDelegate
@@ -358,17 +404,19 @@
 }
 
 #pragma mark - pullTableViewDelegate
-
-
 -(void)pullTableViewDidTriggerLoadMore:(PullTableView *)pullTableView{
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    self.currentPage ++;
+    [self getData];
 }
 
 
 -(void)pullTableViewDidTriggerRefresh:(PullTableView *)pullTableView{
     NSLog(@"hello");
     NSLog(@"%@",pullTableView);
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    self.currentPage = 0;
+    [self getData];
 }
 
 -(void)refreshListDataBack{

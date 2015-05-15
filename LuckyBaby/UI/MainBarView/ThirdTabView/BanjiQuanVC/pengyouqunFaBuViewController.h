@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface pengyouqunFaBuViewController : FatherNavViewController
-
+-(instancetype)initWithClassId:(NSString*)classId className:(NSString*)className;
 @end

@@ -15,11 +15,15 @@
 #import "ColorEx.h"
 #import "KGTipView.h"
 #import "dongtaiNetWork.h"
+#import "tianjiaBabyViewController.h"
+#import "PostDataBean.h"
 #define NUM4ROW 4
 
 @interface VedioGetPhotoViewController ()
 {
     CGRect currentRect;
+    int sendPhotoI;
+    bool isSmallPhone;
 }
 @property(nonatomic,assign)BOOL canPopBack;
 @property(nonatomic,strong)UIView *currentBigView;
@@ -38,6 +42,13 @@
 //被选中的图片数
 @property(nonatomic,assign)int selectedPhotoNumber;
 @property(nonatomic,assign)BOOL canShowBigPhoto;
+
+@property (nonatomic,strong) NSMutableArray        *groupArrays;
+
+//压缩后的图片
+@property(nonatomic,strong)NSMutableArray *zipPhoneA;
+@property(nonatomic,strong)NSMutableArray *mediaListA;
+@property(nonatomic,strong)KGTipView *tipView;
 @end
 
 @implementation VedioGetPhotoViewController
@@ -68,6 +79,8 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     //扩展到不透明的区域
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadMediaSuccess:) name:@"uploadMediaSuccess" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadMediaFail:) name:@"uploadMediaFail" object:nil];
     [super viewWillAppear:animated];
     self.edgesForExtendedLayout = UIRectEdgeAll;
     self.extendedLayoutIncludesOpaqueBars = YES;
@@ -76,11 +89,14 @@
 
 -(void)viewWillDisappear:(BOOL)animated{
     self.navigationController.navigationBar.hidden = YES;
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
 - (void)viewDidLoad
 {
     self._dataArray = [NSMutableArray array];
+    sendPhotoI = 0;
+    isSmallPhone = NO;
     self.groundDataStringArray = [NSMutableArray array];
     self.canShowBigPhoto = YES;
     [super viewDidLoad];
@@ -136,17 +152,10 @@
 
 //右barButton按钮
 -(void)setRightReturnBtn{
-//    UIButton* editeNoteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    editeNoteButton.frame = CGRectMake(0, 0, 40, 40);
-//    [editeNoteButton setTitle:@"保存" forState:UIControlStateNormal];
-//    [editeNoteButton addTarget:self action:@selector(popBack) forControlEvents:UIControlEventTouchUpInside];
-//    UIBarButtonItem* barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:editeNoteButton];
-//    self.navigationItem.rightBarButtonItem = barButtonItem;
 }
 
 -(void)setFootBar{
     HJHMyImageView *footBar = [[HJHMyImageView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height - 46, 320, 46)];
-//    footBar.backgroundColor = [UIColor colorWithHexString:@"#1eb6b6"];
     footBar.backgroundColor = [UIColor colorWithHexString:@"#282828"];
     [self.view addSubview:footBar];
     self.completeBtn = [[HJHMyButton alloc]initWithFrame:CGRectMake(241, 11, 65, 29)];
@@ -156,7 +165,7 @@
     [self.completeBtn setBackgroundImage:[UIImage imageNamed:@"completeAbleBtn.png"] forState:UIControlStateNormal];
     [self.completeBtn setBackgroundImage:[UIImage imageNamed:@"Album_btn_selected.png"] forState:UIControlStateHighlighted];
     [self.completeBtn setBackgroundImage:[UIImage imageNamed:@"completeEnableBtn@2x.png"] forState:UIControlStateDisabled];
-    [self.completeBtn addTarget:self action:@selector(getGaoQingPhoto2) forControlEvents:UIControlEventTouchUpInside];
+    [self.completeBtn addTarget:self action:@selector(popBack) forControlEvents:UIControlEventTouchUpInside];
     [footBar addSubview:self.completeBtn];
     
     self.bigPhotoBtn = [[HJHMyButton alloc]initWithFrame:CGRectMake(14, 11, 65, 29)];
@@ -167,73 +176,177 @@
     self.bigPhotoBtn.enabled = NO;
     [self.bigPhotoBtn setTitle:@"" forState:UIControlStateNormal];
     [self.bigPhotoBtn addTarget:self action:@selector(getGaoQingPhoto) forControlEvents:UIControlEventTouchUpInside];
-//    [footBar addSubview:self.bigPhotoBtn];
 }
-
-//
-////设置确定按钮
-//-(void)setConfirmBtn{
-//    UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    btn.frame = CGRectMake(60, 450, 200, 40);
-//    if (iOS7) {
-//        CGRect r = btn.frame;
-//        r.origin.y += 64;
-//        btn.frame = r;
-//    }
-//    [btn setTitle:@"确认" forState:UIControlStateNormal];
-//    [btn addTarget:self action:@selector(popBack) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:btn];
-//}
 
 #pragma mark - 返回图片
 -(void)popBack{
     dispatch_async(dispatch_get_main_queue(), ^{
-        VedioPostDataBean *bean = [self.groupData objectAtIndex:0];
-        NSLog(@"%@",bean.photo);
+//        VedioPostDataBean *bean = [self.groupData objectAtIndex:0];
+//        NSLog(@"%@",bean.photo);
         
         if (!self.dataArray) {
             self.dataArray = [NSMutableArray array];
         }
 
-        if (self.photoNumber + self.groupData.count > 10 && self.style == 1) {
-            NSString *tipString = [NSString stringWithFormat:@"你最多只能选择%ld张照片",10 - self.photoNumber];
-            KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:tipString cancelButtonTitle:@"我知道了" otherCancelButton:nil lockType:LockTypeSelf delegate:self userInfo:nil];
-            [tipView setBackgroundColor:[UIColor whiteColor]];
-//            [tipView defaultStyle];
-            [tipView show];
-        }else{
-            [self upLoadPhone];
-//            if ([self.delegate2 respondsToSelector:@selector(getPhotoDataArray:)]) {
-//                if (self.groupData.count == 0) {
-//                    
-//                }else{
-//                    [self.delegate2 getPhotoDataArray:self.groupData];
-//                }
-//            }
-//            if ([self.delegate2 respondsToSelector:@selector(reloadTableView)]) {
-//                if (self.groupData.count == 0) {
-//                    
-//                }else{
-//                    [self.delegate2 reloadTableView];
-//                }
-//                
-//            }
-//            if (self.groupData.count == 0) {
-//                
-//            }else{
-//                if (self.navigationController.viewControllers.count >= 3) {
-//                    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:self.navigationController.viewControllers.count - 3] animated:YES];
-//                }
-//            }
+//        if (self.photoNumber + self.groupData.count > 10 && self.style == 1) {
+//            NSString *tipString = [NSString stringWithFormat:@"你最多只能选择%ld张照片",10 - self.photoNumber];
+//            KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:tipString cancelButtonTitle:@"我知道了" otherCancelButton:nil lockType:LockTypeSelf delegate:self userInfo:nil];
+//            [tipView setBackgroundColor:[UIColor whiteColor]];
+////            [tipView defaultStyle];
+//            [tipView show];
+//        }else{
+            if (!self.zipPhoneA) {
+                self.zipPhoneA = [NSMutableArray array];
+            }
+            if (!self.mediaListA) {
+                self.mediaListA = [NSMutableArray array];
+            }
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            [dic setObject:@"2014.08.08" forKey:@"mediaOriginaType"];
+            [dic setObject:@"2014.08.08" forKey:@"createDatetime"];
+            [dic setObject:@"123" forKey:@"albumId"];
+            [dic setObject:@"jpg" forKey:@"mediaType"];
+            [self.mediaListA addObject:dic];
+            
+            VedioCustomImage *image = [assets objectAtIndex:sendPhotoI];
+            UIImage *imageV = (UIImage *)image;
+            [self.zipPhoneA addObject:imageV];
+            
+            if (self.style == 1) {
+                self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"上传中" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:nil userInfo:nil];
+                [self.tipView showWithLoading];
+                [self sendPhone:image.photoUrl];
+            }
+            else{
+                if ([self.delegate2 respondsToSelector:@selector(getPhotoDataArray:)]) {
+                    if (self.groupData.count == 0) {
+                        
+                    }else{
+//                        [self.delegate2 getPhotoDataArray:self.groupData];
+                    }
+                }
+                if ([self.delegate2 respondsToSelector:@selector(reloadTableView)]) {
+                    if (self.groupData.count == 0) {
+                        
+                    }else{
+//                        [self.delegate2 reloadTableView];
+                    }
+                    
+                }
+                if (self.groupData.count == 0) {
+                    
+                }else{
+                    if (self.navigationController.viewControllers.count >= 3) {
+                        [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:self.navigationController.viewControllers.count - 3] animated:YES];
+                    }
+                }
+            }
+
+//        }
+    });
+}
+
+#pragma mark -qiniuSendPhoto
+-(void)sendPhone:(id)image{
+    QNUploadManager *upManager2 = [[QNUploadManager alloc] init];
+    
+    NSData *data2;
+    
+    if ([image isKindOfClass:[UIImage class]]) {
+        data2 = UIImagePNGRepresentation(image);
+    }
+    else if([image isKindOfClass:[NSURL class]]){
+        if ([image isFileURL]) {
+            
+            NSString *path = [(NSURL*)image path];
+            
+            if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+                
+                //url文件存在
+                data2 = [NSData dataWithContentsOfFile:path];
+            }
             
         }
-    });
+        
+    }
+//    if (UIImagePNGRepresentation(image) == nil) {
+//        data2 = UIImageJPEGRepresentation(image, 1);
+//    } else {
+//        data2 = UIImagePNGRepresentation(image);
+//    }
+    NSString *token = @"yFQx87hgMNU5MRArsX24-6NdqG_YM4A_k8zUi8gB:OK72atoDetVPI8cqu0rqnriIj10=:eyJzY29wZSI6ImNoaWxkbWFuYWdlciIsImRlYWRsaW5lIjozNTY1MDk2NzYzfQ==";
+    
+    NSString *string2 = [NSString stringWithFormat:@"%@.jpg",gen_uuid()];
+    [upManager2 putData:data2 key:string2 token:token complete: ^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
+        if (isSmallPhone == NO) {
+            if (sendPhotoI < self.groupData.count - 1) {
+                NSMutableDictionary *dic = [self.mediaListA objectAtIndex:sendPhotoI];
+                [dic setObject:[NSString stringWithFormat:@"%@/%@",qiniuAdrress,key] forKey:@"mediaOriginalUrl"];
+                sendPhotoI ++;
+                
+                NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+                [dict setObject:@"2014.08.08" forKey:@"mediaOriginaType"];
+                [dict setObject:@"2014.08.08" forKey:@"createDatetime"];
+                [dict setObject:@"123" forKey:@"albumId"];
+                [dict setObject:@"jpg" forKey:@"mediaType"];
+                [self.mediaListA addObject:dict];
+                
+                VedioCustomImage *image = [assets objectAtIndex:sendPhotoI];
+                UIImage *imageV = (UIImage *)image;
+                [self.zipPhoneA addObject:image.photoUrl];
+                [self.zipPhoneA addObject:imageV];
+            }
+            else if (sendPhotoI == self.groupData.count - 1) {
+                NSMutableDictionary *dic = [self.mediaListA objectAtIndex:sendPhotoI];
+                [dic setObject:[NSString stringWithFormat:@"%@/%@",qiniuAdrress,key] forKey:@"mediaOriginalUrl"];
+                
+                isSmallPhone = YES;
+                sendPhotoI = 0;
+                UIImage *image = [self.zipPhoneA objectAtIndex:sendPhotoI];
+                [self sendPhone:image];
+            }
+        }
+        else{
+            if (sendPhotoI < self.zipPhoneA.count - 1) {
+                NSMutableDictionary *dic = [self.mediaListA objectAtIndex:sendPhotoI];
+                [dic setObject:[NSString stringWithFormat:@"%@/%@",qiniuAdrress,key] forKey:@"mediaThumbailUrl"];
+                sendPhotoI ++;
+                UIImage *image = [self.zipPhoneA objectAtIndex:sendPhotoI];
+                [self sendPhone:image];
+            }
+            else if (sendPhotoI == self.zipPhoneA.count - 1) {
+                NSMutableDictionary *dic = [self.mediaListA objectAtIndex:sendPhotoI];
+                [dic setObject:[NSString stringWithFormat:@"%@/%@",qiniuAdrress,key] forKey:@"mediaThumbailUrl"];
+                
+                isSmallPhone = NO;
+                sendPhotoI = 0;
+                [self upLoadPhone];
+            }
+        }
+        NSLog(@"%@", info);
+        NSLog(@"%@", resp);
+    } option:nil];
+    
 }
 
 #pragma mark - 添加一个上传的接口
 //****************************
 -(void)upLoadPhone{
+    [self.tipView stopLoadingAnimationWithTitle:nil context:@"上传成功" duration:0.5];
+    NSLog(@"%@",self.mediaListA);
+    NSDictionary *dic = [plistDataManager getDataWithKey:@"user_loginList.plist"];
+    dongtaiNetWork *don = [[dongtaiNetWork alloc]init];
+    [don uploadMediaWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] mediaType:@"V" mediaList:self.mediaListA];
+}
+
+-(void)uploadMediaFail:(NSNotification *)noti{
     
+}
+
+-(void)uploadMediaSuccess:(NSNotification *)noti{
+    if (self.navigationController.viewControllers.count >= 3) {
+        [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:self.navigationController.viewControllers.count - 3] animated:YES];
+    }
 }
 //****************************
 
@@ -297,11 +410,9 @@
     }else{
         if (self.selectedPhotoNumber >= self.maxPhotoNumber2) {
             KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"图片总数超过上限（20张）" cancelButtonTitle:@"确认" otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-//            [tipView defaultStyle];
             [tipView show];
         }else{
             KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"本页最多可选6张照片" cancelButtonTitle:@"确认" otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-//            [tipView defaultStyle];
             [tipView show];
         }
     }
@@ -371,13 +482,6 @@
 
 }
 
-//-(void)addImage{
-//    self.bpVC.photoImageView.image = self.currentBigImg;
-//    NSLog(@"%f,%f",self.currentBigImg.size.height,self.currentBigImg.size.width);
-//    self.bpVC.photoImageView.frame = CGRectMake(0, ScreenHeigth/2 - 320*self.currentBigImg.size.height/self.currentBigImg.size.width/2 , 320, 320*self.currentBigImg.size.height/self.currentBigImg.size.width);
-//    [self.bpVC addBiggerAnimation];
-//}
-
 //返回上一页的方法
 -(void)returnLastPage{
     if ([self.delegate2 respondsToSelector:@selector(VedioreloadTableView)]) {
@@ -397,68 +501,112 @@
     // Dispose of any resources that can be recreated.
 }
 
-//从数据库取相片
+//从数据库取视频
 -(void)getPhotosFormSystem{
-    self.library = [[ALAssetsLibrary alloc]init];
-    [self.library enumerateGroupsWithTypes:ALAssetsGroupAlbum usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-        [group setAssetsFilter:[ALAssetsFilter allVideos]];
-        //
-        NSLog(@"%@",group);
-        NSString *g=[NSString stringWithFormat:@"%@",group];//获取相簿的组
-        NSString *g2 = [self cutString:g];
-        //
-        if (group && [g2 isEqualToString:@"Photo Library"]) {
-            self.group = group;
-            [self.group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
-                if (result) {
-                    //NSString *urlstr=[NSString stringWithFormat:@"%@",result.defaultRepresentation.url];//图片的url
-                    VedioCustomImage* image = [[VedioCustomImage alloc]initWithCGImage:[result thumbnail]];
-                    image.isSelected = NO;
-                    image.asset = result;
-                    //image.photoUrl = urlstr;
-                    [assets addObject:image];
-                }
-                if (index==[self.group numberOfAssets]-1) {
-                    [self.groundDataStringArray removeAllObjects];
-                    [collectionTable reloadData];
-                    
-                    //设置为相册的最后一行
-                    NSLog(@"%lu",(unsigned long)assets.count);
-                    int lines = assets.count / 4;
-                    lines += assets.count%4==0?0:1;
-                    float height = lines * 80;
-                    float diff;
-                    if (iPhone5) {
-                        diff = 568 - 40;
-                    }else{
-                        diff = 480 - 40;
-                    }
-                    if (height - diff < 0) {
-                        
-                    }else{
-                        [collectionTable setContentOffset:CGPointMake(0, height - diff)];
-                    }
-                    
-                }
-            }];
-        }
-    } failureBlock:^(NSError *error) {
+    __weak VedioGetPhotoViewController *weakSelf = self;
+    self.groupArrays = [NSMutableArray array];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        ALAssetsLibraryGroupsEnumerationResultsBlock listGroupBlock = ^(ALAssetsGroup *group, BOOL *stop) {
+            if (group != nil) {
+                [weakSelf.groupArrays addObject:group];
+            } else {
+                [weakSelf.groupArrays enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    [obj enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+                        if (result) {
+                            // 视频
+                            if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ){
+                                NSLog(@"%@",result);
+                                NSURL *url = [result valueForProperty:ALAssetPropertyAssetURL];
+                                VedioCustomImage* image = [[VedioCustomImage alloc]initWithCGImage:[self thumbnailImageForVideo:url atTime:0].CGImage];
+                                image.isSelected = NO;
+                                AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
+//                                NSLog(@"%@",assets.)
+                                image.photoUrl = url;
+                                // 和图片方法类似
+                                [assets addObject:image];
+                            }
+                            if (index == [weakSelf.groupArrays count]-1) {
+                                [self.groundDataStringArray removeAllObjects];
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    [collectionTable reloadData];
+                                });
+                                
+                                //设置为相册的最后一行
+                                NSLog(@"+_+_+%lu",(unsigned long)assets.count);
+                                int lines = assets.count / 4;
+                                lines += assets.count%4==0?0:1;
+                                float height = lines * 80;
+                                float diff;
+                                if (iPhone5) {
+                                    diff = 568 - 40;
+                                }else{
+                                    diff = 480 - 40;
+                                }
+                                if (height - diff < 0) {
+                                    
+                                }else{
+                                    [collectionTable setContentOffset:CGPointMake(0, height - diff)];
+                                }
+                                
+                            }
+                        }
+                    }];
+                }];
+                
+            }
+        };
         
-    }];
+        ALAssetsLibraryAccessFailureBlock failureBlock = ^(NSError *error)
+        {
+            
+            NSString *errorMessage = nil;
+            
+            switch ([error code]) {
+                case ALAssetsLibraryAccessUserDeniedError:
+                case ALAssetsLibraryAccessGloballyDeniedError:
+                    errorMessage = @"用户拒绝访问相册,请在<隐私>中开启";
+                    break;
+                    
+                default:
+                    errorMessage = @"Reason unknown.";
+                    break;
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"错误,无法访问!"
+                                                                   message:errorMessage
+                                                                  delegate:self
+                                                         cancelButtonTitle:@"确定"
+                                                         otherButtonTitles:nil, nil];
+                [alertView show];
+            });
+        };
+        
+        
+        ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc]  init];
+        [assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupAll
+                                     usingBlock:listGroupBlock failureBlock:failureBlock];
+    });
 }
 
-//切割不同的group
--(NSString*)cutString:(NSString*)string{
-    NSString *g2 = @"";
-    if (string && [string isKindOfClass:[NSString class]] && string.length > 16) {
-        NSLog(@"gg:%@",string);//gg:ALAssetsGroup - Name:Camera Roll, Type:Saved Photos, Assets count:71
-        
-        NSString *g1=[string substringFromIndex:16] ;
-        NSArray *arr= nil;
-        arr=[g1 componentsSeparatedByString:@","];
-        g2=[[arr objectAtIndex:0] substringFromIndex:5];
-    }
-    return g2;
+- (UIImage*) thumbnailImageForVideo:(NSURL *)videoURL atTime:(NSTimeInterval)time {
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
+    NSParameterAssert(asset);
+    AVAssetImageGenerator *assetImageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    assetImageGenerator.appliesPreferredTrackTransform = YES;
+    assetImageGenerator.apertureMode = AVAssetImageGeneratorApertureModeEncodedPixels;
+    
+    CGImageRef thumbnailImageRef = NULL;
+    CFTimeInterval thumbnailImageTime = time;
+    NSError *thumbnailImageGenerationError = nil;
+    thumbnailImageRef = [assetImageGenerator copyCGImageAtTime:CMTimeMake(thumbnailImageTime, 60) actualTime:NULL error:&thumbnailImageGenerationError];
+    
+    if (!thumbnailImageRef)
+        NSLog(@"thumbnailImageGenerationError %@", thumbnailImageGenerationError);
+    
+    UIImage *thumbnailImage = thumbnailImageRef ? [[UIImage alloc] initWithCGImage:thumbnailImageRef] : nil;
+    
+    return thumbnailImage;
 }
 
 -(UIImageOrientation)coverOrientation:(ALAssetOrientation)orientation
@@ -503,105 +651,6 @@
     }
 }
 
-
-
-//从数据库取单张高清相片
--(void)getOnePhotosFormSystem:(NSInteger)groupNumber{
-    ALAssetsLibrary* library2 = [[ALAssetsLibrary alloc]init];
-    [library2 enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-        //
-        NSString *g=[NSString stringWithFormat:@"%@",group];//获取相簿的组
-        NSString *g2 = [self cutString:g];
-        //
-        if (group && [g2 isEqualToString:self.ablumName]) {
-            [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
-                [result valueForProperty:ALAssetPropertyType];
-                if (result) {
-                    if (index == groupNumber) {
-                        if (self.canPopBack) {
-                            ALAssetRepresentation * representation =  [result defaultRepresentation];
-                            VedioCustomImage* image = nil;
-                          
-                            if (representation.size > 10 * 1024 * 1024) {
-                                ALAssetOrientation A = representation.orientation;
-                                image = [[VedioCustomImage alloc] initWithCGImage:[representation fullScreenImage] scale:[representation scale] orientation:[self coverOrientation:A]];
-                            }
-                            else{
-                                ALAssetOrientation A = representation.orientation;
-                                image = [[VedioCustomImage alloc] initWithCGImage:[representation fullResolutionImage] scale:[representation scale] orientation:[self coverOrientation:A]];
-                            }
-                            
-                            
-//                            long long size = representation.size;
-//                            uint8_t *picByts = malloc(size);
-//                            [representation getBytes:picByts fromOffset:0 length:size - 1 error:NULL];
-//                            NSData* picData = [NSData dataWithBytes:picByts length:size];
-//                            UIImage* picImage = [UIImage imageWithData:picData];
-//                            NSData* ppData = UIImageJPEGRepresentation(picImage, 0.6);
-                            
-                            
-                           
-                            
-                            //NSString *urlstr=[NSString stringWithFormat:@"%@",result.defaultRepresentation.url];//图片的url
-                            image.isSelected = NO;
-                            image.asset = result;
-                            //image.photoUrl = urlstr;
-                            self.currentBigImg = image;
-                            //[self addImage];
-                            VedioPostDataBean *data1 = [[VedioPostDataBean alloc]init];
-                            //data1.photo = image;
-                            //data1.photoUrl = image.photoUrl;
-                            data1.photoNumber = groupNumber;
-                            //先做一次压缩
-                            
-//                            CGSize imageSize = image.size;
-//                            float with = 290 * 2;
-//                            float heigth = imageSize.height * with /imageSize.width;
-//                            UIImage *imageTemp = [image imageByScalingAndCroppingForSize:CGSizeMake(with, heigth)];
-                            
-//                            NSData* imageData = UIImageJPEGRepresentation(image, 1);
-//                            if (imageData.length > 100 * 1024) {
-//                                imageData = UIImageJPEGRepresentation(image, 100 * 1024 / imageData.length);
-//                            }
-                        //    data1.photo = [UIImage imageWithData:imageData];
-                            data1.photo = image;
-                            
-                            //判断是不是单张显示
-                            if (self.style == 0) {
-                                [self.groupData removeAllObjects];
-                            }
-                            [self.groupData addObject:data1];
-                        }else{
-                            NSString *urlstr=[NSString stringWithFormat:@"%@",result.defaultRepresentation.url];
-                            NSMutableArray *arry = [NSMutableArray array];
-                            for (VedioPostDataBean *dataBean in self.groupData) {
-                                NSLog(@"%@\n%@",dataBean.photoUrl,urlstr);
-                                if (![dataBean.photoUrl isEqualToString:urlstr]) {
-                                    [arry addObject:dataBean];
-                                }else{
-                                    
-                                }
-                            }
-                            self.groupData = arry;
-                        }
-                    }
-                    
-                    if (self.groupData.count == self.groundDataStringArray.count && self.canPopOrShowBigPhoto) {
-                        if (self.isBigPhotoOrPopBack) {
-                            [self showBigPhoto];
-                        }else{
-                            [self popBack];
-                        }
-                        self.canPopOrShowBigPhoto = NO;
-                    }
-                }
-            }];
-        }
-    } failureBlock:^(NSError *error) {
-        
-    }];
-}
-
 -(NSInteger)rowsForGroup:(NSInteger)num{
     if (num%NUM4ROW!=0) {
         return ((NSInteger)num/NUM4ROW)+1;
@@ -610,7 +659,7 @@
 
 #pragma mark - tableViewDelegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return [self rowsForGroup:[self.group numberOfAssets]];
+    return (assets.count / 4) + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -643,17 +692,9 @@
                 imageV.image = asset;
                 NSLog(@"+_+_++%d",imageV.subviews.count);
                 if (asset.isSelected == YES) {
-//                    [self.groundDataStringArray addObject:[NSString stringWithFormat:@"%d",[cell superview].tag*4 + imageV.imageNumber%1000]];
                     imageV.selectedImageView.image = [UIImage imageNamed:@"xuanzhongde.png"];
                 }else{
                     imageV.selectedImageView.image = [UIImage imageNamed:@"weixuan.png"];
-//                    NSMutableArray *mArray = [NSMutableArray array];
-//                    for (NSString *dataNumber in self.groundDataStringArray) {
-//                        if (![dataNumber isEqualToString:[NSString stringWithFormat:@"%d",[cell superview].tag*4 + imageV.imageNumber%1000]]) {
-//                            [mArray addObject:dataNumber];
-//                        }
-//                    }
-//                    self.groundDataStringArray = mArray;
                 }
                 [imageV setUserInteractionEnabled:YES];
             }

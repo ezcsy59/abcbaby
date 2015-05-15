@@ -1,0 +1,108 @@
+//
+//  addTiJianJiLuViewViewController.m
+//  LuckyBaby
+//
+//  Created by 黄嘉宏 on 15-4-9.
+//  Copyright (c) 2015年 黄嘉宏. All rights reserved.
+//
+
+#import "addTiJianJiLuViewViewController.h"
+
+@interface addTiJianJiLuViewViewController ()<UITableViewDataSource,UITableViewDelegate>
+@property(nonatomic,strong)UITableView *_tableView;
+
+@end
+
+@implementation addTiJianJiLuViewViewController
+
+-(void)viewWillAppear:(BOOL)animated{
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getDiseaseListSuccess:) name:@"getDiseaseListSuccess" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getDiseaseListFail:) name:@"getDiseaseListFail" object:nil];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+#pragma mark -logic data
+-(void)getDiseaseListSuccess:(NSNotification*)noti{
+    NSDictionary *dic = [noti object];
+    NSArray *array = [dic objectForKey:@"data"];
+}
+
+-(void)getDiseaseListFail:(NSNotification*)noti{
+    
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor colorWithHexString:@"f1f1f1"];
+    
+    [self setTableView];
+    // Do any additional setup after loading the view.
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+-(void)setTableView{
+    self._tableView = [[UITableView alloc]init];
+    self._tableView.backgroundColor = [UIColor colorWithHexString:@"f1f1f1"];
+    [self._tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    self._tableView.frame = CGRectMake(0, 0, ScreenWidth, (iPhone5?568:480) - 44 - 80);
+    self._tableView.delegate = self;
+    self._tableView.dataSource = self;
+    [self._tableView setContentSize:CGSizeMake(ScreenWidth, 568 - 198 + 95)];
+    [self.view addSubview:self._tableView];
+}
+
+#pragma mark - tableViewDelegate
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    // Return the number of sections.
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 29;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    static NSString *cellIdentifier;
+    cellIdentifier = @"MainCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (!cell) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    }
+    
+    HJHMyLabel *zuijinLabel = [[HJHMyLabel alloc]initWithFrame:CGRectMake(100, 0, 100, 60)];
+    zuijinLabel.textColor = [UIColor colorWithHexString:@"666666"];
+    zuijinLabel.backgroundColor = [UIColor clearColor];
+    zuijinLabel.font = [UIFont systemFontOfSize:18];
+    zuijinLabel.textAlignment = NSTextAlignmentCenter;
+    [cell addSubview:zuijinLabel];
+    
+    HJHMyLabel *coutLabel = [[HJHMyLabel alloc]initWithFrame:CGRectMake(200, 0, 100, 60)];
+    coutLabel.textColor = [UIColor colorWithHexString:@"666666"];
+    coutLabel.backgroundColor = [UIColor clearColor];
+    coutLabel.font = [UIFont systemFontOfSize:18];
+    coutLabel.textAlignment = NSTextAlignmentCenter;
+    [cell addSubview:coutLabel];
+    
+    return cell;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    //    BinLiXiangQingTableViewCell *qCell=  [[BinLiXiangQingTableViewCell alloc]init];
+    //    float f = [qCell getCellHeight:[self.benliBenArray objectAtIndex:indexPath.row]];
+    return 60 ;
+}
+
+
+@end

@@ -14,6 +14,7 @@
 #import "SoundRecord.h"
 #import "KGVoiceView.h"
 
+
 @interface pengyouqunFaBuViewController ()<UITableViewDataSource,UITableViewDelegate,KGEmojiViewDelegate,ChoseAblumDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UITextViewDelegate>
 @property(nonatomic,strong)UITableView *_tableView;
 @property(nonatomic,strong)NSMutableArray *photoBigImageArray;
@@ -33,6 +34,9 @@
 @property(nonatomic,strong)HJHMyButton *voiceDeleBtn;
 
 @property(nonatomic,strong)KGVoiceView *voiceView;
+
+@property(nonatomic,strong)NSString *classId;
+@property(nonatomic,strong)NSString *className;
 @end
 
 @implementation pengyouqunFaBuViewController
@@ -57,6 +61,14 @@
     
 }
 
+-(instancetype)initWithClassId:(NSString*)classId className:(NSString*)className{
+    if (self = [super init]) {
+        self.classId = classId;
+        self.className = className;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -67,6 +79,10 @@
     
     self.headNavView.titleLabel.text = @"新话题";
     self.view.backgroundColor = [UIColor colorWithHexString:@"#F1F1F1"];
+    
+    if (self.classId.length > 0) {
+        self.headNavView.backgroundColor = [UIColor colorWithHexString:@"#7FC369"];
+    }
     
     [self addLeftReturnBtn];
     [self.leftBtn setTitle:@"返回" forState:UIControlStateNormal];
@@ -240,7 +256,7 @@
         [sheet show];
     }
     else{
-        showBigPhotoViewController *sBPVC = [[showBigPhotoViewController alloc]initWithPhotoA:(self.photoBigImageArray) andTab:btn.tag%1000 isLocationPhoto:YES];
+        showBigPhotoViewController *sBPVC = [[showBigPhotoViewController alloc]initWithPhotoA:(self.photoBigImageArray) andTab:btn.tag%1000 isLocationPhoto:YES isClassShow:YES];
         [self.navigationController pushViewController:sBPVC animated:YES];
     }
 }

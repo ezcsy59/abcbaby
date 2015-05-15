@@ -10,6 +10,7 @@
 #define LuckyBaby_Header_h
 
 #define user_loginList @"user_loginList.plist"
+#define teacher_loginList @"teacher_loginList.plist"
 #define user_playformList @"user_playformList.plist"
 #define user_binLi @"user_binLi.plist"
 #endif

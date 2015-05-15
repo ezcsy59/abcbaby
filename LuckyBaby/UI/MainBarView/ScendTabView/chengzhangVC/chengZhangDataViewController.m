@@ -15,6 +15,7 @@
 @property(nonatomic,strong)UITableView *_tableView;
 @property(nonatomic,strong)NSArray *chengZhangDataArray;
 
+@property(nonatomic,assign)NSInteger currentPage;
 @end
 
 @implementation chengZhangDataViewController
@@ -37,6 +38,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    self.currentPage = 0;
     [self getData];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listHealthInfoSuccess:) name:@"listHealthInfoSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listHealthInfoFail:) name:@"listHealthInfoFail" object:nil];
@@ -51,7 +53,7 @@
     NSDictionary *dic = [plistDataManager getDataWithKey:@"user_loginList.plist"];
     self.chengZhangDataArray = [NSArray array];
     jianKangNetWork *jianKangNetWork1 = [[jianKangNetWork alloc]init];
-    [jianKangNetWork1 listHealthInfoWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] page:@"0" pageSize:@"10"];
+    [jianKangNetWork1 listHealthInfoWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] page:[NSString stringWithFormat:@"%d",self.currentPage] pageSize:@"10"];
 }
 
 -(void)listHealthInfoSuccess:(NSNotification*)noti{

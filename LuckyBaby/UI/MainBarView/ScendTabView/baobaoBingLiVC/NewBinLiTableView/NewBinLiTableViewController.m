@@ -143,6 +143,8 @@
     for (UIView *view in cell.subviews) {
         [view removeFromSuperview];
     }
+    [cell removeFromSuperview];
+    cell = nil;
     if (!cell) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
@@ -369,7 +371,7 @@
         [sheet show];
     }
     else{
-        showBigPhotoViewController *sBPVC = [[showBigPhotoViewController alloc]initWithPhotoA:(self.photoBigImageArray) andTab:btn.tag%1000 isLocationPhoto:YES];
+        showBigPhotoViewController *sBPVC = [[showBigPhotoViewController alloc]initWithPhotoA:(self.photoBigImageArray) andTab:btn.tag%1000 isLocationPhoto:YES isClassShow:NO];
         [self.navigationController pushViewController:sBPVC animated:YES];
     }
 }

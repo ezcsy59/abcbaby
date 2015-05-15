@@ -41,7 +41,7 @@
         [self addSubview:self.footLayer];
         
         self.rightImage = [[HJHMyImageView alloc]init];
-        self.rightImage.frame = CGRectMake(290, 13, 10, 17.5);
+        self.rightImage.frame = CGRectMake(270, 13, 10, 17.5);
         [self addSubview:self.rightImage];
     }
     return self;

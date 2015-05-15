@@ -133,7 +133,6 @@
     for (UIView *view in cell.subviews) {
         [view removeFromSuperview];
     }
-    
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; 
     if (indexPath.row == 0) {
         HJHMyLabel *zuijinLabel = [[HJHMyLabel alloc]initWithFrame:CGRectMake(10, 0, 100, 60)];

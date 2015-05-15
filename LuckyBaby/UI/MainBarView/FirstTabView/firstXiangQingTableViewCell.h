@@ -12,13 +12,14 @@
 
 -(void)pingLunBtnClickWithNumberIndexRow:(NSString*)numberIndexRow;
 
+-(void)yinPinBtnClickWithNumberIndexRow:(NSString*)numberIndexRow;
 @end
 
 @interface firstXiangQingTableViewCell : UITableViewCell
 
 @property(nonatomic,assign)id<firstXiangQingTableViewCell> delegate2;
 @property(nonatomic,strong)NSString *numberIndexRow;
-
+@property(nonatomic,assign)BOOL canShowBigPhoto;
 
 -(void)resetViewView:(NSDictionary *)dic;
 

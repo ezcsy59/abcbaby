@@ -13,5 +13,5 @@
     UIInputToolbarViewController2 *InputToolbarView;
 }
 
-
+-(instancetype)initWithClassId:(NSString*)classId className:(NSString*)className;
 @end

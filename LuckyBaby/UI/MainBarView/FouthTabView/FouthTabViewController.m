@@ -11,6 +11,9 @@
 #import "baiduDiTuViewController.h"
 #import "xigaiMimaViewController.h"
 #import "tiXingViewController.h"
+#import "TeacherNetWork.h"
+#import "UIButton+WebCache.h"
+#import "guanyuViewController.h"
 @interface FouthTabViewController ()<KGTipViewDelegate>{
     KGTipView *_tipView;
 }
@@ -26,6 +29,27 @@
         // Custom initialization
     }
     return self;
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(teacherLoginSuccess:) name:@"teacherLoginSuccess" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(teacherLoginFail:) name:@"teacherLoginFail" object:nil];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+#pragma mark -logic data
+-(void)teacherLoginSuccess:(NSNotification*)noti{
+    RootViewController* root = (RootViewController*)getCurrentRootController;
+    [self dismissViewControllerAnimated:NO completion:nil];
+    [root deleteMainView];
+    [root addT_MainView];
+}
+
+-(void)teacherLoginFail:(NSNotification*)noti{
+    
 }
 
 - (void)viewDidLoad
@@ -61,15 +85,21 @@
     headerImagView.frame = CGRectMake(0, 0, ScreenWidth, 150);
     self._tableView.tableHeaderView = headerImagView;
     
+    NSDictionary *dic = [plistDataManager getDataWithKey:user_loginList];
     HJHMyLabel *headerLabel = [[HJHMyLabel alloc]init];
-    headerLabel.frame = CGRectMake(185, 0, 100, 150);
-    headerLabel.text = @"";
+    headerLabel.frame = CGRectMake(170, 10, 100, 150);
+    headerLabel.text = [DictionaryStringTool stringFromDictionary:dic forKey:@"nickName"];
     headerLabel.font = [UIFont systemFontOfSize:20];
     [headerImagView addSubview:headerLabel];
     
     HJHMyButton *headerBtn = [[HJHMyButton alloc]init];
-    headerBtn.frame = CGRectMake(320/2 - 35, 70, 70, 70);
-    [headerBtn setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+    headerBtn.clipsToBounds = YES;
+    headerBtn.frame = CGRectMake(320/2 - 75, 50, 70, 70);
+    headerBtn.layer.cornerRadius = 35;
+    headerBtn.layer.borderColor = [UIColor whiteColor].CGColor;
+    headerBtn.layer.borderWidth = 2;
+    headerBtn.userInteractionEnabled = NO;
+    [headerBtn setImageWithURL:[NSURL URLWithString:[DictionaryStringTool stringFromDictionary:dic forKey:@"portraitUrl"]] placeholderImage:[UIImage imageNamed:@"ic_picture_loadfailed"]];
     [headerImagView addSubview:headerBtn];
     
     
@@ -102,7 +132,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 0) {
-        return 3;
+        return 4;
     }
     else{
         return 2;
@@ -141,6 +171,12 @@
             case 2:
             {
                 comCell.label.text = @"提醒事项";
+                comCell.leftImage.image = [UIImage imageNamed:@"remind_img.png"];
+            }
+                break;
+            case 3:
+            {
+                comCell.label.text = @"跳转到教师端";
                 comCell.leftImage.image = [UIImage imageNamed:@"remind_img.png"];
             }
                 break;
@@ -204,12 +240,20 @@
         [self.navigationController pushViewController:bVC animated:YES];
     }
     if(indexPath.section == 0 && indexPath.row == 1){
-        xigaiMimaViewController *bVC = [[xigaiMimaViewController alloc]init];
+        xigaiMimaViewController *bVC = [[xigaiMimaViewController alloc]initWithStyle:0];
         [self.navigationController pushViewController:bVC animated:YES];
     }
     if(indexPath.section == 0 && indexPath.row == 2){
         tiXingViewController *bVC = [[tiXingViewController alloc]init];
         [self.navigationController pushViewController:bVC animated:YES];
+    }
+    if(indexPath.section == 0 && indexPath.row == 3){
+        TeacherNetWork *tNet = [[TeacherNetWork alloc]init];
+        [tNet TeacherLogin];
+    }
+    if (indexPath.section == 1 && indexPath.row == 0) {
+        guanyuViewController *gVC = [[guanyuViewController alloc]initWithStyle:0];
+        [self.navigationController pushViewController:gVC animated:YES];
     }
 }
 

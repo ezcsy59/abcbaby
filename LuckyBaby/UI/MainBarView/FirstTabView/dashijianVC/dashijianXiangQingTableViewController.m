@@ -130,6 +130,13 @@
     [self showKeyboard];
 }
 
+-(void)yinPinBtnClickWithNumberIndexRow:(NSString *)numberIndexRow{
+    //    self.currentIndexrow = numberIndexRow;
+    //    [self showKeyboard];
+    AvaPlayer *player = [AvaPlayer sharedManager];
+    [player playWithUrl:[DictionaryStringTool stringFromDictionary:self.xiangQingDic forKey:@"voiceUrl"]];
+}
+
 #pragma mark - sendMessageDelegate
 -(void)postMessage:(NSString *)message{
     self.currentMessage = message;

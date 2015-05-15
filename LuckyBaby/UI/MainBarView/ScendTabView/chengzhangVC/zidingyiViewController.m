@@ -97,6 +97,7 @@
     for (UIView *view in cell.subviews) {
         [view removeFromSuperview];
     }
+
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; 
     cell.backgroundColor = [UIColor colorWithHexString:@"f1f1f1"];
     

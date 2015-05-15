@@ -28,13 +28,16 @@
 -(void)getAllAlbumWithChildIdFamily:(NSString*)childIdFamily;
 
 //查询年月相册列表
--(void)getAlbumListWithChildIdFamily:(NSString*)childIdFamily page:(NSString*)page size:(NSString*)size;
+-(void)getAlbumListWithChildIdFamily:(NSString*)childIdFamily page:(NSString*)page pageSize:(NSString*)pageSize;
+
+//年度查询照片和视频
+-(void)getAlbumPhotoListWithAlbumId:(NSString*)albumId page:(NSString*)page pageSize:(NSString*)pageSize;
 
 //导入照片和视频
 -(void)uploadMediaWithChildIdFamily:(NSString*)childIdFamily mediaType:(NSString*)mediaType mediaList:(NSArray*)mediaList;
 
 //查询全部照片
--(void)getAllPhotosWithChildIdFamily:(NSString*)childIdFamily page:(NSString*)page size:(NSString*)size;
+-(void)getAllPhotosWithChildIdFamily:(NSString*)childIdFamily page:(NSString*)page pageSize:(NSString*)pageSize;
 
 //获取邀请码
 -(void)getInvitationCodeWithChildIdFamily:(NSString*)childIdFamily;

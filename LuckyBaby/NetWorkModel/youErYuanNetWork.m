@@ -43,8 +43,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -79,8 +80,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -123,8 +125,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -166,8 +169,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -206,8 +210,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -244,8 +249,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -286,8 +292,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -329,8 +336,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -375,8 +383,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -421,8 +430,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -461,8 +471,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -507,8 +518,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -544,8 +556,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -584,8 +597,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -626,8 +640,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -663,8 +678,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -703,8 +719,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -752,8 +769,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -789,8 +807,9 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);
@@ -830,8 +849,133 @@
             [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
-        [tipView show];
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+    }];
+}
+
+-(void)listPickableRelativesWithChildIdPlatform:(NSString*)childIdPlatform{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:childIdPlatform forKey:@"childIdPlatform"];
+    dic = [networkDicHeader addHeaderDic:dic];
+    NSString *urlString = [NSString stringWithFormat:@"%@/school/duty/listAccompanyRelatives",serverAPIAddress];
+    
+    self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"数据加载中..." cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:nil userInfo:nil];
+    [self.tipView showWithLoading];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+    [manager POST:urlString parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@",operation);
+        NSLog(@"%@",responseObject);
+        NSString *flag = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"flag"];
+        if ([flag isEqualToString:@"0"]) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"listPickableRelativesSuccess" object:responseObject];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:@"加载完成" duration:0.8];
+        }
+        else{
+            NSString *msg = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"msg"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"listPickableRelativesFail" object:msg];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+    }];
+}
+
+-(void)savePickableRelativesWithType:(NSString*)type childIdPlatform:(NSString*)childIdPlatform relativesName:(NSString*)relativesName relationsName:(NSString*)relationsName relativesMobile:(NSString *)relativesMobile accompanyPhoto:(NSString *)accompanyPhoto recId:(NSString*)recId{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dic setObject:type forKey:@"type"];
+    [dic setObject:dict forKey:@"accompanyRelatives"];
+    [dict setObject:childIdPlatform forKey:@"childIdPlatform"];
+    [dict setObject:relativesName forKey:@"relativesName"];
+    [dict setObject:relationsName forKey:@"relationsName"];
+    [dict setObject:relativesMobile forKey:@"relativesMobile"];
+    [dict setObject:accompanyPhoto forKey:@"accompanyPhoto"];
+    if (recId) {
+        [dict setObject:recId forKey:@"recId"];
+    }
+    dic = [networkDicHeader addHeaderDic:dic];
+    NSString *urlString = [NSString stringWithFormat:@"%@/school/duty/saveAccompanyRelatives",serverAPIAddress];
+    
+    self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"数据加载中..." cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:nil userInfo:nil];
+    [self.tipView showWithLoading];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+    [manager POST:urlString parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@",operation);
+        NSLog(@"%@",responseObject);
+        NSString *flag = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"flag"];
+        if ([flag isEqualToString:@"0"]) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"savePickableRelativesSuccess" object:responseObject];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:@"加载完成" duration:0.8];
+        }
+        else{
+            NSString *msg = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"msg"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"savePickableRelativesFail" object:msg];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+    }];
+}
+
+-(void)delPickableRelativesWithRecId:(NSString*)recId{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:recId forKey:@"recId"];
+    dic = [networkDicHeader addHeaderDic:dic];
+    NSString *urlString = [NSString stringWithFormat:@"%@/school/duty/delAccompanyRelatives",serverAPIAddress];
+    
+    self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"数据加载中..." cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:nil userInfo:nil];
+    [self.tipView showWithLoading];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+    [manager POST:urlString parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@",operation);
+        NSLog(@"%@",responseObject);
+        NSString *flag = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"flag"];
+        if ([flag isEqualToString:@"0"]) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"delPickableRelativesSuccess" object:responseObject];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:@"加载完成" duration:0.8];
+        }
+        else{
+            NSString *msg = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"msg"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"delPickableRelativesFail" object:msg];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [self.tipView stopLoadingAnimationWithTitle:@"" context:@"" duration:0];
+        self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [self.tipView show];
         NSLog(@"%@",error);
         NSLog(@"%@",operation);
         NSLog(@"%@",error);

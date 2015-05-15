@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface showBigPhotoViewController : UIViewController
--(instancetype)initWithPhotoA:(NSArray*)photoA andTab:(NSInteger)tag isLocationPhoto:(BOOL)isLocationPhoto;
+-(instancetype)initWithPhotoA:(NSArray*)photoA andTab:(NSInteger)tag isLocationPhoto:(BOOL)isLocationPhoto isClassShow:(BOOL)isClassShow;
 @end

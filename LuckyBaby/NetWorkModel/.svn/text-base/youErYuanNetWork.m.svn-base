@@ -1,0 +1,340 @@
+//
+//  youErYuanNetWork.m
+//  LuckyBaby
+//
+//  Created by 黄嘉宏 on 15-4-6.
+//  Copyright (c) 2015年 黄嘉宏. All rights reserved.
+//
+
+#import "youErYuanNetWork.h"
+
+
+@interface youErYuanNetWork ()
+@property(nonatomic,strong)KGTipView *tipView;
+@end
+
+@implementation youErYuanNetWork
+-(void)withoutBindWithUserName:(NSString*)userName{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:userName forKey:@"userName"];
+    dic = [networkDicHeader addHeaderDic:dic];
+    NSString *urlString = [NSString stringWithFormat:@"%@/school/index/withoutBind",serverAPIAddress];
+    
+    self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"数据加载中..." cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:nil userInfo:nil];
+    [self.tipView showWithLoading];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+    [manager POST:urlString parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@",operation);
+        NSLog(@"%@",responseObject);
+        NSString *flag = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"flag"];
+        if ([flag isEqualToString:@"0"]) {
+            [plistDataManager writeData:responseObject withKey:user_playformList];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"withoutBindSuccess" object:responseObject];
+           
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:@"加载完成" duration:0.8];
+        }
+        else{
+            NSString *msg = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"msg"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"withoutBindFail" object:msg];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [tipView show];
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+    }];
+}
+
+-(void)getFamilyAddressCoordinateWithChildIdPlatform:(NSString*)childIdPlatform{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:childIdPlatform forKey:@"childIdPlatform"];
+    dic = [networkDicHeader addHeaderDic:dic];
+    NSString *urlString = [NSString stringWithFormat:@"%@/school/index/getCurrentClass",serverAPIAddress];
+    
+//    self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"数据加载中..." cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:nil userInfo:nil];
+//    [self.tipView showWithLoading];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+    [manager POST:urlString parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@",operation);
+        NSLog(@"%@",responseObject);
+        NSString *flag = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"flag"];
+        if ([flag isEqualToString:@"0"]) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"getFamilyAddressCoordinateSuccess" object:responseObject];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:@"加载完成" duration:0.8];
+        }
+        else{
+            NSString *msg = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"msg"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"getFamilyAddressCoordinateFail" object:msg];
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [tipView show];
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+    }];
+}
+
+
+-(void)getPlatformInformsWithchildIdPlatform:(NSString*)childIdPlatform classId:(NSString*)classId platformId:(NSString*)platformId semesterId:(NSString*)semesterId page:(NSString*)page pageSize:(NSString*)pageSize{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:childIdPlatform forKey:@"childIdPlatform"];
+    [dic setObject:classId forKey:@"classId"];
+    [dic setObject:platformId forKey:@"platformId"];
+    [dic setObject:semesterId forKey:@"semesterId"];
+    [dic setObject:page forKey:@"page"];
+    [dic setObject:pageSize forKey:@"pageSize"];
+
+    dic = [networkDicHeader addHeaderDic:dic];
+    NSString *urlString = [NSString stringWithFormat:@"%@/school/index/getPlatformInforms",serverAPIAddress];
+    
+//    self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"数据加载中..." cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:nil userInfo:nil];
+//    [self.tipView showWithLoading];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+    [manager POST:urlString parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@",operation);
+        NSLog(@"%@",responseObject);
+        NSString *flag = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"flag"];
+        if ([flag isEqualToString:@"0"]) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"getPlatformInformsSuccess" object:responseObject];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:@"加载完成" duration:0.8];
+        }
+        else{
+            NSString *msg = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"msg"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"getPlatformInformsFail" object:msg];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [tipView show];
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+    }];
+}
+
+
+-(void)getMealSchedulePlatformWithClassId:(NSString*)classId semesterId:(NSString*)semesterId platformId:(NSString*)platformId dateStart:(NSString *)dateStart dateEnd:(NSString*)dateEnd{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:classId forKey:@"classId"];
+    [dic setObject:semesterId forKey:@"semesterId"];
+    [dic setObject:platformId forKey:@"platformId"];
+    [dic setObject:dateStart forKey:@"dateStart"];
+    [dic setObject:dateEnd forKey:@"dateEnd"];
+    
+    dic = [networkDicHeader addHeaderDic:dic];
+    NSString *urlString = [NSString stringWithFormat:@"%@/school/meal/getMealSchedulePlatform",serverAPIAddress];
+    
+    self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"数据加载中..." cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:nil userInfo:nil];
+    [self.tipView showWithLoading];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+    [manager POST:urlString parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@",operation);
+        NSLog(@"%@",responseObject);
+        NSString *flag = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"flag"];
+        if ([flag isEqualToString:@"0"]) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"getMealSchedulePlatformSuccess" object:responseObject];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:@"加载完成" duration:0.8];
+        }
+        else{
+            NSString *msg = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"msg"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"getMealSchedulePlatformFail" object:msg];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [tipView show];
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+    }];
+}
+
+-(void)getCourseSchedulePlatformWeekWithClassId:(NSString*)classId semesterId:(NSString*)semesterId platformId:(NSString*)platformId{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:classId forKey:@"classId"];
+    [dic setObject:semesterId forKey:@"semesterId"];
+    [dic setObject:platformId forKey:@"platformId"];
+    
+    dic = [networkDicHeader addHeaderDic:dic];
+    NSString *urlString = [NSString stringWithFormat:@"%@/school/course/getCourseSchedulePlatformWeek",serverAPIAddress];
+    
+    self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"数据加载中..." cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:nil userInfo:nil];
+    [self.tipView showWithLoading];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+    [manager POST:urlString parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@",operation);
+        NSLog(@"%@",responseObject);
+        NSString *flag = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"flag"];
+        if ([flag isEqualToString:@"0"]) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"getCourseSchedulePlatformWeekSuccess" object:responseObject];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:@"加载完成" duration:0.8];
+        }
+        else{
+            NSString *msg = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"msg"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"getCourseSchedulePlatformWeekFail" object:msg];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [tipView show];
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+    }];
+}
+
+-(void)getplatforminformDetailWithInfoId:(NSString*)infoId{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:infoId forKey:@"infoId"];
+    
+    dic = [networkDicHeader addHeaderDic:dic];
+    NSString *urlString = [NSString stringWithFormat:@"%@/school/index/getPlatformInformDetail",serverAPIAddress];
+    
+    self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"数据加载中..." cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:nil userInfo:nil];
+    [self.tipView showWithLoading];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+    [manager POST:urlString parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@",operation);
+        NSLog(@"%@",responseObject);
+        NSString *flag = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"flag"];
+        if ([flag isEqualToString:@"0"]) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"getplatforminformDetailSuccess" object:responseObject];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:@"加载完成" duration:0.8];
+        }
+        else{
+            NSString *msg = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"msg"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"getplatforminformDetailFail" object:msg];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [tipView show];
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+    }];
+}
+
+-(void)getCircleListWithClassId:(NSString*)classId semesterId:(NSString*)semesterId platformId:(NSString*)platformId page:(NSString*)page pageSize:(NSString*)pageSize{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:classId forKey:@"classId"];
+    [dic setObject:semesterId forKey:@"semesterId"];
+    [dic setObject:platformId forKey:@"platformId"];
+    [dic setObject:page forKey:@"page"];
+    [dic setObject:pageSize forKey:@"pageSize"];
+    
+    dic = [networkDicHeader addHeaderDic:dic];
+    NSString *urlString = [NSString stringWithFormat:@"%@/school/class/getCircleList",serverAPIAddress];
+    
+    self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"数据加载中..." cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:nil userInfo:nil];
+    [self.tipView showWithLoading];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+    [manager POST:urlString parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@",operation);
+        NSLog(@"%@",responseObject);
+        NSString *flag = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"flag"];
+        if ([flag isEqualToString:@"0"]) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"getCircleListSuccess" object:responseObject];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:@"加载完成" duration:0.8];
+        }
+        else{
+            NSString *msg = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"msg"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"getCircleListFail" object:msg];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [tipView show];
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+    }];
+}
+
+-(void)praiseAndReplyWithClassId:(NSString*)classId semesterId:(NSString*)semesterId platformId:(NSString*)platformId parentId:(NSString*)parentId type:(NSString*)type content:(NSString*)content{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:classId forKey:@"classId"];
+    [dic setObject:semesterId forKey:@"semesterId"];
+    [dic setObject:platformId forKey:@"platformId"];
+    [dic setObject:parentId forKey:@"parentId"];
+    [dic setObject:type forKey:@"type"];
+    [dic setObject:content forKey:@"content"];
+    
+    dic = [networkDicHeader addHeaderDic:dic];
+    NSString *urlString = [NSString stringWithFormat:@"%@/school/class/circle/praiseAndReply",serverAPIAddress];
+    
+    self.tipView = [[KGTipView alloc]initWithTitle:nil context:@"数据加载中..." cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:nil userInfo:nil];
+    [self.tipView showWithLoading];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingMutableContainers];
+    [manager POST:urlString parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@",operation);
+        NSLog(@"%@",responseObject);
+        NSString *flag = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"flag"];
+        if ([flag isEqualToString:@"0"]) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"praiseAndReplySuccess" object:responseObject];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:@"加载完成" duration:0.8];
+        }
+        else{
+            NSString *msg = [DictionaryStringTool stringFromDictionary:responseObject forKey:@"msg"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"praiseAndReplyFail" object:msg];
+            
+            [self.tipView stopLoadingAnimationWithTitle:@"" context:msg duration:0.8];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        KGTipView *tipView = [[KGTipView alloc]initWithTitle:nil context:@"网络链接失败" cancelButtonTitle:nil otherCancelButton:nil lockType:LockTypeGlobal delegate:self userInfo:nil];
+        [tipView show];
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+        NSLog(@"%@",error);
+        NSLog(@"%@",operation);
+    }];
+}
+@end

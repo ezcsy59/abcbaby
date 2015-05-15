@@ -54,7 +54,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.headNavView.titleLabel.text = @"病例详情";
+    self.headNavView.titleLabel.text = @"详情";
     self.view.backgroundColor = [UIColor colorWithHexString:@"#F1F1F1"];
     
     [self addLeftReturnBtn];
@@ -118,6 +118,7 @@
     qCell.backgroundColor = [UIColor colorWithHexString:@"f9f9f9"];
     qCell.delegate2 = self;
     qCell.numberIndexRow = [NSString stringWithFormat:@"%ld",(long)indexPath.row];
+    qCell.canShowBigPhoto = YES;
     [qCell resetViewView:self.xiangQingDic];
     return cell;
 }
@@ -167,6 +168,11 @@
 -(void)pingLunBtnClickWithNumberIndexRow:(NSString *)numberIndexRow{
     self.currentIndexrow = numberIndexRow;
     [self showKeyboard];
+}
+
+-(void)yinPinBtnClickWithNumberIndexRow:(NSString *)numberIndexRow{
+    AvaPlayer *player = [AvaPlayer sharedManager];
+    [player playWithUrl:[DictionaryStringTool stringFromDictionary:self.xiangQingDic forKey:@"voiceUrl"]];
 }
 
 #pragma mark - sendMessageDelegate

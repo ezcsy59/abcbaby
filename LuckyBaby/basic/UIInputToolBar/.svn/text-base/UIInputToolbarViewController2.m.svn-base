@@ -1,0 +1,348 @@
+/*
+ *  UIInputToolbarViewController.m
+ *
+ *  Created by Brandon Hamilton on 2011/05/03.
+ *  Copyright 2011 Brandon Hamilton.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
+#import "UIInputToolbarViewController2.h"
+
+#define kStatusBarHeight 20
+#define kDefaultToolbarHeight 42
+#define kDefaultLabelHeight 20
+#define kKeyboardHeightPortrait 216
+#define kKeyboardHeightLandscape 140
+#define kIOS7 0
+
+
+@implementation UIInputToolbarViewController2
+@synthesize inputToolbar;
+//@synthesize delegate;
+@synthesize delegate2;
+@synthesize delegate3;
+#pragma mark - View lifecycle
+
+- (void)dealloc
+{
+    [inputToolbar release];
+    [super dealloc];
+}
+
+-(void)viewDidLoad{
+    [super viewDidLoad];
+    self.heightBreak = 0;
+}
+
+- (void)loadView
+{
+    [super loadView];
+    keyboardIsVisible = NO;
+    countOfDiff = 0;
+    if (!self.notEnableToClickView) {
+        self.notEnableToClickView = [[UIImageView alloc]initWithFrame:self.delegate2.view.bounds];
+        self.notEnableToClickView.userInteractionEnabled = NO;
+        self.notEnableToClickView.backgroundColor = [UIColor clearColor];
+        self.notEnableToClickView.alpha = .7;
+        [self.delegate2.view addSubview:self.notEnableToClickView];
+        NSLog(@"%f,%f,%f,%f",self.notEnableToClickView.frame.size.height,self.notEnableToClickView.frame.size.width,self.notEnableToClickView.frame.origin.y,self.notEnableToClickView.frame.origin.x);
+    }
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(cancelButtonPressed:)];
+    [self.notEnableToClickView addGestureRecognizer:tap];
+    
+    /* Calculate screen size */
+    CGRect screenFrame = [[UIScreen mainScreen] applicationFrame];
+    self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 570 - kIOS7 -kDefaultToolbarHeight, screenFrame.size.width, kDefaultToolbarHeight)];
+    //self.view.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1];
+    /* Create toolbar */
+    self.inputToolbar = [[UIInputToolbar alloc] initWithFrame:CGRectMake(0, 0, screenFrame.size.width, kDefaultToolbarHeight) andTextViewStr:@""];
+    [self.view addSubview:self.inputToolbar];
+    //inputToolbar.backgroundColor = [UIColor whiteColor];
+    inputToolbar.delegate2 = self;
+    
+//    countLabel = [[UILabel alloc]initWithFrame:CGRectMake(screenFrame.size.width-100, screenFrame.size.height-kDefaultToolbarHeight-25, 100, kDefaultLabelHeight)];
+//    countLabel.backgroundColor = [UIColor clearColor];
+//    countLabel.textAlignment = UITextAlignmentCenter;
+//    countLabel.textColor = [UIColor whiteColor];
+//    countLabel.text = @"0/100";
+//    [self.view addSubview:countLabel];
+    
+    /*create tapGestureRecognizer*/
+    [self.inputToolbar.textView.internalTextView becomeFirstResponder];
+}
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+	/* Listen for keyboard */
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+	[super viewWillDisappear:animated];
+	/* No longer listen for keyboard */
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return YES;
+}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    CGRect screenFrame = [[UIScreen mainScreen] applicationFrame];
+    CGRect r = self.inputToolbar.frame;
+	if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation))
+    {
+        r.origin.y = screenFrame.size.height - self.inputToolbar.frame.size.height - kStatusBarHeight;
+        if (keyboardIsVisible) {
+            r.origin.y -= kKeyboardHeightPortrait;
+        }
+        [self.inputToolbar.textView setMaximumNumberOfLines:3];
+	}
+	else
+    {
+        r.origin.y = screenFrame.size.width - self.inputToolbar.frame.size.height - kStatusBarHeight;
+        if (keyboardIsVisible) {
+            r.origin.y -= kKeyboardHeightLandscape;
+        }
+        [self.inputToolbar.textView setMaximumNumberOfLines:3];
+        [self.inputToolbar.textView sizeToFit];
+    }
+    self.inputToolbar.frame = r;
+}
+
+#pragma mark -
+#pragma mark Notifications
+
+- (void)keyboardWillShow:(NSNotification *)notification
+{
+    /* Move the toolbar to above the keyboard */
+    self.inputToolbar.hidden = NO;
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationDuration:0.29];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+	CGRect inputFrame = self.view.frame;
+    CGRect labelFrame = countLabel.frame;
+    NSDictionary *userInfo = [notification userInfo];
+    NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [aValue CGRectValue];
+    //高度调整
+    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+        if (iOS7) {
+            NSLog(@"%f",self.view.superview.frame.size.height);
+            inputFrame.origin.y = self.changeBarShowY - kIOS7 - kDefaultToolbarHeight - keyboardRect.size.height + rememberDiff*countOfDiff - self.heightBreak;
+        }else{
+            inputFrame.origin.y = self.changeBarShowY - 20 - kIOS7 - kDefaultToolbarHeight - keyboardRect.size.height + rememberDiff*countOfDiff - self.heightBreak;
+        }
+        if (!iPhone5) {
+            inputFrame.origin.y -= 90;
+        }
+        
+    }
+    else {
+        if (iOS7) {
+            inputFrame.origin.y = self.changeBarShowY - kIOS7 - kDefaultToolbarHeight - keyboardRect.size.height + rememberDiff*countOfDiff - self.heightBreak;
+        }else{
+            inputFrame.origin.y = self.changeBarShowY - 20 - kIOS7 - kDefaultToolbarHeight - keyboardRect.size.height + rememberDiff*countOfDiff - self.heightBreak;
+        }
+        if (!iPhone5) {
+            inputFrame.origin.y -= 90;
+        }
+    }
+	self.view.frame = inputFrame;
+    countLabel.frame = labelFrame;
+	[UIView commitAnimations];
+    keyboardIsVisible = YES;
+    self.notEnableToClickView.userInteractionEnabled = YES;
+}
+
+//清空页面
+-(void)removeFromPublishView{
+    [self.view removeFromSuperview];
+    [self.delegate3 removeFormParent];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification
+{
+    //self.inputToolbar.hidden = YES;
+    /* Move the toolbar back to bottom of the screen */
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationDuration:0.3];
+	CGRect inputFrame = self.view.frame;
+    CGRect labelFrame = countLabel.frame;
+    
+    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+        if (iOS7) {
+            inputFrame.origin.y = 570 - kIOS7 - 40 + rememberDiff*countOfDiff;
+        }else{
+            inputFrame.origin.y = 570 - 20 - kIOS7 - 40 + rememberDiff*countOfDiff;
+        }
+        if (!iPhone5) {
+            inputFrame.origin.y -= 90;
+        }
+    }
+    else {
+        if (iOS7) {
+            inputFrame.origin.y = 570 - kIOS7 - 40 - kDefaultToolbarHeight + rememberDiff*countOfDiff;
+        }else{
+            inputFrame.origin.y = 570 - 20 - kIOS7 - 40 - kDefaultToolbarHeight + rememberDiff*countOfDiff;
+        }
+        if (!iPhone5) {
+            inputFrame.origin.y -= 90;
+        }
+    }
+	self.view.frame = inputFrame;
+    labelFrame.origin.y = inputFrame.origin.y - kDefaultLabelHeight;
+    countLabel.frame = labelFrame;
+    keyboardIsVisible = NO;
+    self.notEnableToClickView.userInteractionEnabled = NO;
+    if (self.mineNewComment == nil) {
+        //self.inputToolbar.textView.placeholder = @"发表评论";
+    }else{
+        //self.inputToolbar.textView.placeholder = @"发表评论";
+    }
+    [UIView commitAnimations];
+}
+
+#pragma mark - UIInputToolbarDelegate
+
+-(void)changeLabelHeight:(float)diff
+{
+//    if (countOfDiff > 1 && diff < 0) {
+//        
+//    }else{
+        CGRect labelFrame = countLabel.frame;
+        labelFrame.origin.y  += diff;
+        countLabel.frame = labelFrame;
+        CGRect r = self.view.frame;
+        r.origin.y += diff;
+        r.size.height -= diff;
+        self.view.frame = r;
+        
+        CGRect r1 = self.inputToolbar.frame;
+        //r.origin.y += diff;
+        r1.size.height -= diff;
+        self.inputToolbar.frame = r1;
+        
+        if (diff < 0) {
+            countOfDiff++;
+            rememberDiff = diff;
+        }else if(diff > 0){
+            countOfDiff--;
+            rememberDiff = diff;
+        }
+//    }
+}
+
+-(void)inputButtonPressed:(NSString *)inputText
+{
+    /* Called when toolbar button is pressed */
+    NSLog(@"Pressed button with text: '%@'", inputText);
+}
+
+-(void)cancelButtonPressed:(UITapGestureRecognizer *)tap
+{
+    CGPoint tapPoint = [tap locationInView:self.view];
+    if (!CGRectContainsPoint(self.inputToolbar.frame, tapPoint)) {
+        [self cancelButtonPressed];
+    }
+}
+
+-(void)cancelButtonPressed
+{
+    [self removeFromPublishView];
+    [self.view endEditing:YES];
+    [self.inputToolbar clearText];
+    self.inputToolbar.cancelBtn.selected = NO;
+    countOfDiff = 0;
+    rememberDiff = 0;
+    //收起键盘时切换回默认键盘
+    if (self.inputToolbar.textView.internalTextView.emoticonsKeyboard) [self.inputToolbar.textView.internalTextView switchToDefaultKeyboard];
+}
+
+-(void)changeLabelCount:(int)num
+{
+    countLabel.text = [NSString stringWithFormat:@"%d/100",num];
+}
+
+//取出send按钮返回的信息
+-(void)sendMessage:(NSString *)message{
+    if ([delegate3 respondsToSelector:@selector(postMessage:)]) {
+        if (self.returnWords == nil) {
+            self.returnWords = @"";
+        }
+        NSLog(@"%@",message);
+        StringLength strLength;
+        strLength = [self getToInt:message];
+        if (strLength.length > self.maxLabelCount) {
+            NSLog(@"%d,%d,%d,%d",self.maxLabelCount - strLength.chnCount,self.maxLabelCount,strLength.chnCount,strLength.length);
+            message = [message substringToIndex:self.maxLabelCount - strLength.chnCount];
+        }
+        NSLog(@"%@",message);
+        
+        message = [NSString stringWithFormat:@"%@%@",self.returnWords,message];
+        
+        [delegate3 postMessage:message];
+    }
+}
+
+- (StringLength)getToInt:(NSString*)toBeString{
+    StringLength strLength;
+//    strLength.length = [toBeString length];
+//    strLength.chnCount = 0;
+//    float cutString = 0;
+//    for (int i=0; i<[toBeString length]; ++i)
+//    {
+//        NSRange range = NSMakeRange(i, 1);
+//        NSString *subString = [toBeString substringWithRange:range];
+//        const char *cString = [subString UTF8String];
+//        if (strlen(cString) == 3)
+//        {
+//            strLength.length += 1;
+//            strLength.chnCount++;
+//            cutString += 2;
+//        }else{
+//            cutString += 1;
+//        }
+//        if (cutString > self.maxLabelCount) {
+//            return strLength;
+//        }
+//    }
+    strLength.length = toBeString.length;
+    strLength.chnCount = 0;
+    return strLength;
+}
+
+-(int)maxLabelCount{
+    return 300;
+}
+@end

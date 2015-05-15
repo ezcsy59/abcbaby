@@ -20,6 +20,7 @@
 @property(nonatomic,strong)HJHMyLabel *createdTimeLabel;
 @property(nonatomic,strong)HJHMyImageView *photoImage;
 @property(nonatomic,strong)HJHMyButton *pingLunBtn;
+@property(nonatomic,strong)HJHMyButton *loveLunBtn;
 @property(nonatomic,strong)HJHMyImageView *pingLunTextMainView;
 @property(nonatomic,strong)HJHMyImageView *footImageV;
 @end
@@ -99,6 +100,10 @@
     self.createdTimeLabel.font = [UIFont systemFontOfSize:18];
     [self addSubview:self.createdTimeLabel];
     
+    self.loveLunBtn = [[HJHMyButton alloc]init];
+    [self.loveLunBtn setImage:[UIImage imageNamed:@"[p1001]"] forState:UIControlStateNormal];
+    [self.loveLunBtn addTarget:self action:@selector(loveLunBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:self.loveLunBtn];
     
     self.pingLunBtn = [[HJHMyButton alloc]init];
     [self.pingLunBtn setImage:[UIImage imageNamed:@"edit1"] forState:UIControlStateNormal];
@@ -141,8 +146,8 @@
     self.createdTimeLabel.text = [TimeChange timeChage:createTime];
     self.createdTimeLabel.frame = CGRectMake(80, self.photoImage.frame.size.height + self.photoImage.frame.origin.y + 10, 220, 20);
     
-    self.pingLunBtn.frame = CGRectMake(280, self.createdTimeLabel.frame.origin.y, 30, 30);
-    
+    self.pingLunBtn.frame = CGRectMake(280, self.createdTimeLabel.frame.origin.y, 20, 20);
+    self.loveLunBtn.frame = CGRectMake(255, self.createdTimeLabel.frame.origin.y, 20, 20);
     
     NSArray *commentArray = [DictionaryStringTool stringFromDictionary:dic forKey:@"replyList"];
     NSArray *praisesArray = [DictionaryStringTool stringFromDictionary:dic forKey:@"praiseList"];
@@ -165,18 +170,18 @@
                 praiseList = [NSString stringWithFormat:@"%@,[p1001]%@",praiseList,commentDesc];
             }
         }
-        TQRichTextView *mainTextView = [[TQRichTextView alloc]initWithFrame:CGRectMake(0, 0, 220, 0)];
+        TQRichTextView *mainTextView = [[TQRichTextView alloc]initWithFrame:CGRectMake(0, 0, 200, 0)];
         mainTextView.text = praiseList;
         mainTextView.backgroundColor = [UIColor clearColor];
         mainTextView.font = [UIFont systemFontOfSize:18];
         mainTextView.userInteractionEnabled = NO;
         mainTextView.textColor = [UIColor colorWithHexString:@"4DD0C8"];
         mainTextView.lineSpacing = 0.1;
-        mainTextView.frame = CGRectMake(0, lastHeight + 5, 220, mainTextView.drawheigth);
+        mainTextView.frame = CGRectMake(0, lastHeight + 5, 200, mainTextView.drawheigth);
         lastHeight += mainTextView.drawheigth;
         [self.pingLunTextMainView addSubview:mainTextView];
         
-        self.pingLunTextMainView.frame = CGRectMake(80, self.createdTimeLabel.frame.size.height + self.createdTimeLabel.frame.origin.y + 10, 220, lastHeight+ 5);
+        self.pingLunTextMainView.frame = CGRectMake(80, self.createdTimeLabel.frame.size.height + self.createdTimeLabel.frame.origin.y + 10, 200, lastHeight+ 5);
         self.pingLunTextMainView.backgroundColor = [UIColor colorWithHexString:@"f1f1f1"];
     }
     if ([commentArray isKindOfClass:[NSArray class]]) {
@@ -220,4 +225,7 @@
     [self.delegate2 pingLunBtnClickWithNumberIndexRow:self.numberIndexRow];
 }
 
+-(void)loveLunBtnClick{
+    [self.delegate2 loveBtnClickWithNumberIndexRow:self.numberIndexRow];
+}
 @end

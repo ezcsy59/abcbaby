@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface showXiaoPianViewController : FatherNavViewController
-
+-(instancetype)initWithStyle:(NSString *)albumId;
 @end

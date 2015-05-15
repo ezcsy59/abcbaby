@@ -7,25 +7,16 @@
 //
 
 #import "Tab1_insertFirstTabVC.h"
-#import "HJHMainCell.h"
-#import "tianjiaBabyViewController.h"
-#import "qinLieBiaoViewController.h"
-#import "xiangCeViewController.h"
-#import "dashijianViewController.h"
-#import "firstXiangQingTableViewCell.h"
-#import "dongtaiNetWork.h"
-#import "firstXiangQingViewController.h"
+#import "TeacherNetWork.h"
+#import "tongzhiXiangQingViewController.h"
 #define kDefaultToolbarHeight 42
 #define kIOS7 0
-@interface Tab1_insertFirstTabVC ()<firstXiangQingTableViewCell,sendMessage>
+@interface Tab1_insertFirstTabVC ()
 @property(nonatomic,strong)EGORefreshTableHeaderView *_refreshHeaderView;
 @property(nonatomic,strong)PullTableView *_tableView;
-@property(nonatomic,strong)HJHMyImageView *mainImageView;
-
-@property(nonatomic,strong)NSString *currentIndexrow;
-@property(nonatomic,strong)NSString *currentMessage;
-
 @property(nonatomic,strong)NSMutableArray *fisrtXiangQingArray;
+
+@property(nonatomic,assign)NSInteger currentPage;
 
 @end
 
@@ -41,12 +32,11 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    //[self getData];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getStoryListSuccess:) name:@"getStoryListSuccess" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getStoryListFail:) name:@"getStoryListFail" object:nil];
-    
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveStoryCommentSuccess:) name:@"saveStoryCommentSuccess" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveStoryCommentFail:) name:@"saveStoryCommentFail" object:nil];
+    self.currentPage = 0;
+    self.fisrtXiangQingArray = [NSMutableArray array];
+    [self getData];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getPlatformInformsSuccess:) name:@"getPlatformInformsSuccess" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getPlatformInformsFail:) name:@"getPlatformInformsFail" object:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -54,191 +44,69 @@
 }
 
 -(void)getData{
-    self.fisrtXiangQingArray = [NSMutableArray array];
-    dongtaiNetWork *donT = [[dongtaiNetWork alloc]init];
-    NSDictionary *dic = [plistDataManager getDataWithKey:user_loginList];
-    [donT getStoryListWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] page:@"0" pageSize:@"10"];
+    TeacherNetWork *tNet = [[TeacherNetWork alloc]init];
+    NSDictionary *dic = [plistDataManager getDataWithKey:teacher_loginList];
+    [tNet getPlatformInformsWithTeacherId:[DictionaryStringTool stringFromDictionary:dic forKey:@"teacherId"] classId:[DictionaryStringTool stringFromDictionary:dic forKey:@"classId"] deptId:[DictionaryStringTool stringFromDictionary:dic forKey:@"deptId"]  platformId:[DictionaryStringTool stringFromDictionary:dic forKey:@"platformId"]  appType:[DictionaryStringTool stringFromDictionary:dic forKey:@"appType"]  page:[NSString stringWithFormat:@"%d",self.currentPage] pageSize:@"20"];
 }
 
 #pragma mark -logic data
--(void)getStoryListSuccess:(NSNotification*)noti{
+-(void)getPlatformInformsSuccess:(NSNotification*)noti{
     NSDictionary *dic = [noti object];
     NSArray *array = [dic objectForKey:@"data"];
     if ([array isKindOfClass:[NSArray class]]) {
-        self.fisrtXiangQingArray = [[NSMutableArray alloc]initWithArray:array];
-    }
-    
-    //把［察汗］系列变成［p6］系列
-    for (int i = 0; i < self.fisrtXiangQingArray.count; i++) {
-        NSMutableDictionary *dcit = [[NSMutableDictionary alloc]initWithDictionary:[self.fisrtXiangQingArray objectAtIndex:i]];
-        NSString *stirng = [dcit objectForKey:@"storyDesc"];
-        if ([stirng isKindOfClass:[NSString class]]) {
-            stirng = [emojiStringChange emojiStringChange:stirng];
-            [dcit setObject:stirng forKey:@"storyDesc"];
-        }
-        NSArray *comARR = [dcit objectForKey:@"commentList"];
-        if ([comARR isKindOfClass:[NSMutableArray class]]) {
-            NSMutableArray *commintArr = [[NSMutableArray alloc]initWithArray:comARR];
-            for (int i = 0; i < commintArr.count; i++) {
-                NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithDictionary:[commintArr objectAtIndex:i]];
-                NSString *stirng = [dict objectForKey:@"commentDesc"];
-                if ([stirng isKindOfClass:[NSString class]]) {
-                    stirng = [emojiStringChange emojiStringChange:stirng];
-                    [dict setObject:stirng forKeyedSubscript:@"commentDesc"];
-                }
-                [commintArr replaceObjectAtIndex:i withObject:dict];
+        if ([array isKindOfClass:[NSArray class]]) {
+            if (self.currentPage == 0) {
+                self.fisrtXiangQingArray = [[NSMutableArray alloc]initWithArray:array];
             }
-            [dcit setObject:commintArr forKey:@"commentList"];
+            else{
+                for (NSDictionary *dic in array) {
+                    [self.fisrtXiangQingArray addObject:dic];
+                }
+            }
         }
-        [self.fisrtXiangQingArray replaceObjectAtIndex:i withObject:dcit];
     }
     //************************
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
     [self._tableView reloadData];
 }
 
--(void)getStoryListFail:(NSNotification*)noti{
-    
-}
-
--(void)saveStoryCommentSuccess:(NSNotification*)noti{
-    
-}
-
--(void)saveStoryCommentFail:(NSNotification*)noti{
-    
+-(void)getPlatformInformsFail:(NSNotification*)noti{
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
 }
 
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self setMainImageView];
     [self setMainTableView];
     // Do any additional setup after loading the view.
 }
 
 -(void)setMainTableView{
-    self._tableView = [[PullTableView alloc]initWithFrame:CGRectMake(0, -5, ScreenWidth, 568 - 198 + 78) style:UITableViewStylePlain];
+    self._tableView = [[PullTableView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, 568 - 158) style:UITableViewStylePlain];
     if (!iPhone5) {
-        self._tableView.frame = CGRectMake(0, -5, ScreenWidth, 568 - 198 + 78 - 88);
+        self._tableView.frame = CGRectMake(0, 0, ScreenWidth, 568 - 158 - 88);
     }
-    
+    self._tableView.backgroundColor = [UIColor colorWithHexString:@"f6f6f6"];
     [self._tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     ((PullTableView*)(self._tableView)).pullDelegate = self;
     self._tableView.delegate = self;
     self._tableView.dataSource = self;
-    self._tableView.tableHeaderView = self.mainImageView;
     [self._tableView setContentSize:CGSizeMake(ScreenWidth, 568 - 198 + 95)];
     [self.view addSubview:self._tableView];
 }
 
--(void)setMainImageView{
-    self.mainImageView = [[HJHMyImageView alloc]init];
-    self.mainImageView.frame = CGRectMake(0, 0, ScreenWidth, 198 + 60);
-    self.mainImageView.image = [UIImage imageNamed:@"mybaby_top_bg.png"];
-    
-    for (int i = 0; i < 4; i++) {
-        HJHMyButton *btn = [[HJHMyButton alloc]init];
-        btn.frame = CGRectMake(i*80, 198, 80, 60);
-        btn.tag = i;
-        [btn addTarget:self action:@selector(fistViewBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        [self.mainImageView addSubview:btn];
-        HJHMyLabel *label = [[HJHMyLabel alloc]init];
-        label.font = [UIFont systemFontOfSize:14];
-        label.frame = CGRectMake(0, 40, 80, 20);
-        label.textColor = [UIColor whiteColor];
-        label.textAlignment = NSTextAlignmentCenter;
-        [btn addSubview:label];
-        switch (i) {
-            case 0:
-            {
-                btn.backgroundColor = [UIColor colorWithHexString:@"#4FCEAD"];
-                HJHMyImageView *btnImageView = [[HJHMyImageView alloc]init];
-                btnImageView.userInteractionEnabled = NO;
-                btnImageView.image = [UIImage imageNamed:@"main_album_img.png"];
-                btnImageView.contentMode = UIViewContentModeScaleAspectFit;
-                btnImageView.frame = CGRectMake(20, 5, 40, 35);
-                [btn addSubview:btnImageView];
-                
-                label.text = @"相册";
-            }
-                break;
-            case 1:
-            {
-                btn.backgroundColor = [UIColor colorWithHexString:@"#FED43F"];
-                HJHMyImageView *btnImageView = [[HJHMyImageView alloc]init];
-                btnImageView.userInteractionEnabled = NO;
-                btnImageView.image = [UIImage imageNamed:@"main_friends_and_family_img.png"];
-                btnImageView.contentMode = UIViewContentModeScaleAspectFit;
-                btnImageView.frame = CGRectMake(20, 5, 40, 35);
-                [btn addSubview:btnImageView];
-                
-                label.text = @"亲友团";
-            }
-                break;
-            case 2:
-            {
-                btn.backgroundColor = [UIColor colorWithHexString:@"#5F9FEA"];
-                HJHMyImageView *btnImageView = [[HJHMyImageView alloc]init];
-                btnImageView.userInteractionEnabled = NO;
-                btnImageView.image = [UIImage imageNamed:@"mian_baby_info_img.png"];
-                btnImageView.frame = CGRectMake(20, 5, 40, 35);
-                [btn addSubview:btnImageView];
-                
-                label.text = @"宝贝信息";
-            }
-                break;
-            case 3:
-            {
-                btn.backgroundColor = [UIColor colorWithHexString:@"#EF717E"];
-                HJHMyImageView *btnImageView = [[HJHMyImageView alloc]init];
-                btnImageView.userInteractionEnabled = NO;
-                btnImageView.image = [UIImage imageNamed:@"main_breaking_news_img.png"];
-                btnImageView.frame = CGRectMake(20, 5, 40, 35);
-                [btn addSubview:btnImageView];
-                
-                label.text = @"大事记";
-                
-            }
-                break;
-            default:
-                break;
-        }
-    }
-}
-
 #pragma mark - btnClick
--(void)fistViewBtnClick:(HJHMyButton*)btn{
-    switch (btn.tag) {
-        case 0:
-        {
-            xiangCeViewController *xiangC = [[xiangCeViewController alloc]init];
-            [self.navigationController pushViewController:xiangC animated:YES];
-        }
-            break;
-        case 1:
-        {
-            qinLieBiaoViewController *qinB = [[qinLieBiaoViewController alloc]init];
-            [self.navigationController pushViewController:qinB animated:YES];
-        }
-            break;
-        case 2:
-        {
-            tianjiaBabyViewController *babayM = [[tianjiaBabyViewController alloc]initWithStyle:1];
-            [self.navigationController pushViewController:babayM animated:YES];
-        }
-            break;
-        case 3:
-        {
-            dashijianViewController *daVC = [[dashijianViewController alloc]init];
-            [self.navigationController pushViewController:daVC animated:YES];
-        }
-            break;
-            
-        default:
-            break;
-    }
-}
 
 #pragma mark - tableViewDelegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -257,118 +125,96 @@
     cellIdentifier = @"MainCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (!cell) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    }
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; 
     for (UIView *view in cell.subviews) {
         [view removeFromSuperview];
     }
-    cell = [[firstXiangQingTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; 
-    firstXiangQingTableViewCell *qCell = (firstXiangQingTableViewCell*)cell;
-    qCell.backgroundColor = [UIColor colorWithHexString:@"f9f9f9"];
-    qCell.numberIndexRow = [NSString stringWithFormat:@"%ld",(long)indexPath.row];
-    qCell.delegate2 = self;
-    [qCell resetViewView:[self.fisrtXiangQingArray objectAtIndex:indexPath.row]];
+    
+    HJHMyImageView *leftImage = [[HJHMyImageView alloc]init];
+    leftImage.backgroundColor = [UIColor clearColor];
+    leftImage.userInteractionEnabled = NO;
+    leftImage.frame = CGRectMake(10, 10, 60, 60);
+    leftImage.layer.cornerRadius = 30;
+    leftImage.layer.borderColor = [UIColor colorWithHexString:@"#7DCAE6"].CGColor;
+    leftImage.layer.borderWidth = 2;
+    [cell addSubview:leftImage];
+    
+    NSDictionary *dic = [self.fisrtXiangQingArray objectAtIndex:indexPath.row];
+    NSString *time = [DictionaryStringTool stringFromDictionary:dic forKey:@"datePublic"];
+    if (time.length >= 3) {
+        time = [TimeChange timeChage:[time substringToIndex:(time.length - 3)]];
+    }
+    NSArray *array = [time componentsSeparatedByString:@" "];
+    
+    
+    HJHMyLabel *label = [[HJHMyLabel alloc]init];
+    
+    label.font = [UIFont systemFontOfSize:22];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.frame = CGRectMake(0, 5, 60, 22);
+    label.textColor = [UIColor blackColor];
+    [leftImage addSubview:label];
+    
+    HJHMyLabel *label2 = [[HJHMyLabel alloc]init];
+    
+    label2.font = [UIFont systemFontOfSize:13];
+    label2.textAlignment = NSTextAlignmentCenter;
+    label2.frame = CGRectMake(0, 30, 60, 13);
+    label2.textColor = [UIColor colorWithHexString:@"666666"];
+    [leftImage addSubview:label2];
+    
+    
+    HJHMyLabel *label3 = [[HJHMyLabel alloc]init];
+    label3.text = [DictionaryStringTool stringFromDictionary:dic forKey:@"infoTitle"];
+    label3.font = [UIFont systemFontOfSize:18];
+    label3.textAlignment = NSTextAlignmentLeft;
+    label3.frame = CGRectMake(80, 0, 120, 80);
+    label3.textColor = [UIColor colorWithHexString:@"666666"];
+    [cell addSubview:label3];
+    
+    HJHMyImageView *footImage2 = [[HJHMyImageView alloc]init];
+    footImage2.frame = CGRectMake(0, 79.5, 320, 0.5);
+    footImage2.backgroundColor = [UIColor colorWithHexString:@"C8C7CC"];
+    [cell addSubview:footImage2];
+    
+    if (array.count > 1) {
+        NSString *time1 = [array objectAtIndex:0];
+        NSArray *arrytime = [time1 componentsSeparatedByString:@"-"];
+        
+        label.text = [arrytime objectAtIndex:2];
+        label2.text = [NSString stringWithFormat:@"%@.%@",[arrytime objectAtIndex:1],[arrytime objectAtIndex:0]];
+    }
+    
     return cell;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    firstXiangQingTableViewCell *qCell=  [[firstXiangQingTableViewCell alloc]init];
-    float f = [qCell getCellHeight:[self.fisrtXiangQingArray objectAtIndex:indexPath.row]];
-    return f;
+    return 80;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    firstXiangQingViewController *bVC = [[firstXiangQingViewController alloc]initWithXiangQingDic:[self.fisrtXiangQingArray objectAtIndex:indexPath.row]];
+    NSDictionary *dic = [self.fisrtXiangQingArray objectAtIndex:indexPath.row];
+    tongzhiXiangQingViewController *bVC = [[tongzhiXiangQingViewController alloc]initWithInfoId:[DictionaryStringTool stringFromDictionary:dic forKey:@"infoId"]];
     [self.navigationController pushViewController:bVC animated:YES];
 }
 
-#pragma mark - btnClick
--(void)setCommentData{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSMutableDictionary *dcit = [[NSMutableDictionary alloc]initWithDictionary:[self.fisrtXiangQingArray objectAtIndex:[self.currentIndexrow integerValue]]];
-        NSArray *comARR = [dcit objectForKey:@"commentList"];
-        if ([comARR isKindOfClass:[NSMutableArray class]]) {
-            NSMutableArray *commintArr = [[NSMutableArray alloc]initWithArray:comARR];
-            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-            [dict setObject:self.currentMessage forKey:@"commentDesc"];
-            [dict setObject:@"爷爷" forKey:@"creatorName"];
-            [commintArr addObject:dict];
-            [dcit setObject:commintArr forKey:@"commentList"];
-            [self.fisrtXiangQingArray replaceObjectAtIndex:[self.currentIndexrow integerValue] withObject:dcit];
-        }
-        else{
-            NSMutableArray *commintArr = [NSMutableArray array];
-            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-            [dict setObject:self.currentMessage forKey:@"commentDesc"];
-            [dict setObject:@"爷爷" forKey:@"creatorName"];
-            [commintArr addObject:dict];
-            [dcit setObject:commintArr forKey:@"commentList"];
-            [self.fisrtXiangQingArray replaceObjectAtIndex:[self.currentIndexrow integerValue] withObject:dcit];
-        }
-        //************************
-        [self._tableView reloadData];
-    });
-}
-
-#pragma mark -firstXiangQingDelegate
--(void)pingLunBtnClickWithNumberIndexRow:(NSString *)numberIndexRow{
-    self.currentIndexrow = numberIndexRow;
-    [self showKeyboard];
-}
-
-#pragma mark - sendMessageDelegate
--(void)postMessage:(NSString *)message{
-    self.currentMessage = message;
-    [self setCommentData];
-    dongtaiNetWork *dongT = [[dongtaiNetWork alloc]init];
-    message = [emojiStringChange emojiStringChange2:message];
-    NSDictionary *dic = [self.fisrtXiangQingArray objectAtIndex:[self.currentIndexrow integerValue]];
-    [dongT saveStoryCommentWithStoryId:[DictionaryStringTool stringFromDictionary:dic forKey:@"storyId"] commentDesc:message voiceUrl:@""];
-}
-
--(void)removeFormParent{
-    InputToolbarView = nil;
-    [InputToolbarView removeFromParentViewController];
-}
-
-//键盘栏目弹出
-#pragma mark - keyboard
--(void)showKeyboard{
-    // NSLog(@"%@",InputToolbarView);
-    if (InputToolbarView == nil) {
-        InputToolbarView = [[UIInputToolbarViewController2 alloc]init];
-        InputToolbarView.changeBarShowY = 573;
-        [self addChildViewController:InputToolbarView];
-        
-        //InputToolbarView.mineNewComment = self.mineNewComment;
-        InputToolbarView.delegate2 = self;
-        InputToolbarView.delegate3 = self;
-        InputToolbarView.view.frame = CGRectMake(0, (iPhone5?568:480), 320, kDefaultToolbarHeight);
-        [InputToolbarView.view setBackgroundColor:[UIColor clearColor]];
-        //heightBreak
-        InputToolbarView.heightBreak = 70;
-        [self.view addSubview:InputToolbarView.view];
-        //付值放在addsubview后面
-        //NSLog(@"%@",self.mineNewComment);
-        //        if (self.mineNewComment == nil) {
-        //            self.InputToolbarView.inputToolbar.textView.placeholder = @"发表评论";
-        //        }else{
-        //            self.InputToolbarView.inputToolbar.textView.placeholder = [NSString stringWithFormat:@"回复：",self.mineNewComment];
-        //        }
-    }
-}
-
 #pragma mark - pullTableViewDelegate
-
-
 -(void)pullTableViewDidTriggerLoadMore:(PullTableView *)pullTableView{
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    self.currentPage ++;
+    [self getData];
 }
 
 
 -(void)pullTableViewDidTriggerRefresh:(PullTableView *)pullTableView{
     NSLog(@"hello");
     NSLog(@"%@",pullTableView);
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    self.currentPage = 0;
+    [self getData];
 }
 
 -(void)refreshListDataBack{

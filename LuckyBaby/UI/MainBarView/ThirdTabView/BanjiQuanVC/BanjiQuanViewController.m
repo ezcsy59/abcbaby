@@ -8,7 +8,7 @@
 
 #import "BanjiQuanViewController.h"
 #import "pengyouquanTableViewCell.h"
-#import "BinLiXiangqingViewController.h"
+#import "penyouquanXiangQingViewController.h"
 #import "youErYuanNetWork.h"
 #import "pengyouqunFaBuViewController.h"
 #define kDefaultToolbarHeight 42
@@ -20,11 +20,27 @@
 @property(nonatomic,strong)NSMutableArray *benliBenArray;
 @property(nonatomic,strong)NSString *currentIndexrow;
 @property(nonatomic,strong)NSString *currentMessage;
+
+@property(nonatomic,strong)NSString *classId;
+@property(nonatomic,strong)NSString *className;
+
+@property(nonatomic,assign)NSInteger currentPage;
 @end
 
 @implementation BanjiQuanViewController
 
+-(instancetype)initWithClassId:(NSString*)classId className:(NSString*)className{
+    if (self = [super init]) {
+        self.classId = classId;
+        self.className = className;
+
+    }
+    return self;
+}
+
 -(void)viewWillAppear:(BOOL)animated{
+    self.currentPage = 0;
+    self.benliBenArray = [NSMutableArray array];
     [self getData];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getCircleListSuccess:) name:@"getCircleListSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getCircleListFail:) name:@"getCircleListFail" object:nil];
@@ -38,10 +54,15 @@
 }
 
 -(void)getData{
-    self.benliBenArray = [NSMutableArray array];
     youErYuanNetWork *youE = [[youErYuanNetWork alloc]init];
-    NSDictionary *dic = [plistDataManager getDataWithKey:user_playformList];
-    [youE getCircleListWithClassId:[DictionaryStringTool stringFromDictionary:dic forKey:@"classId"] semesterId:[DictionaryStringTool stringFromDictionary:dic forKey:@"semesterId"] platformId:[DictionaryStringTool stringFromDictionary:dic forKey:@"platformId"] page:@"0" pageSize:@"10"];
+    NSDictionary *dic = [plistDataManager getDataWithKey:teacher_loginList];
+    if (self.classId.length > 0) {
+        [youE getCircleListWithClassId:self.classId semesterId:[DictionaryStringTool stringFromDictionary:dic forKey:@"semesterId"] platformId:[DictionaryStringTool stringFromDictionary:dic forKey:@"platformId"] page:[NSString stringWithFormat:@"%d",self.currentPage] pageSize:@"10"];
+    }
+    else{
+        [youE getCircleListWithClassId:[DictionaryStringTool stringFromDictionary:dic forKey:@"classId"] semesterId:[DictionaryStringTool stringFromDictionary:dic forKey:@"semesterId"] platformId:[DictionaryStringTool stringFromDictionary:dic forKey:@"platformId"] page:[NSString stringWithFormat:@"%d",self.currentPage] pageSize:@"10"];
+    }
+    
 }
 
 #pragma mark -logic data
@@ -49,7 +70,14 @@
     NSDictionary *dic = [noti object];
     NSArray *array = [dic objectForKey:@"data"];
     if ([array isKindOfClass:[NSArray class]]) {
-        self.benliBenArray = [[NSMutableArray alloc]initWithArray:array];
+        if (self.currentPage == 0) {
+            self.benliBenArray = [[NSMutableArray alloc]initWithArray:array];
+        }
+        else{
+            for (NSDictionary *dic in array) {
+                [self.benliBenArray addObject:dic];
+            }
+        }
     }
     
     //把［察汗］系列变成［p6］系列
@@ -77,11 +105,24 @@
         [self.benliBenArray replaceObjectAtIndex:i withObject:dcit];
     }
     //************************
+    
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
+    
     [self._tableView reloadData];
 }
 
 -(void)getCircleListFail:(NSNotification*)noti{
-    
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
 }
 
 -(void)praiseAndReplySuccess:(NSNotification*)noti{
@@ -117,6 +158,11 @@
     
     [self addLeftReturnBtn];
     [self.leftBtn setTitle:@"返回" forState:UIControlStateNormal];
+    
+    if (self.classId.length > 0) {
+        self.headNavView.titleLabel.text = self.className;
+        self.headNavView.backgroundColor = [UIColor colorWithHexString:@"#7FC369"];
+    }
     
     [self addRigthBtn];
     [self.rigthBtn setTitle:@"发布" forState:UIControlStateNormal];
@@ -171,6 +217,8 @@
     for (UIView *view in cell.subviews) {
         [view removeFromSuperview];
     }
+    [cell removeFromSuperview];
+    cell = nil;
     cell = [[pengyouquanTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; 
     pengyouquanTableViewCell *qCell = (pengyouquanTableViewCell*)cell;
@@ -188,8 +236,14 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    BinLiXiangqingViewController *bVC = [[BinLiXiangqingViewController alloc]initWithXiangQingDic:[self.benliBenArray objectAtIndex:indexPath.row]];
-    [self.navigationController pushViewController:bVC animated:YES];
+    if(self.classId.length > 0){
+        penyouquanXiangQingViewController *bVC = [[penyouquanXiangQingViewController alloc]initWithDic:[self.benliBenArray objectAtIndex:indexPath.row] classId:self.classId className:self.className];
+        [self.navigationController pushViewController:bVC animated:YES];
+    }
+    else{
+        penyouquanXiangQingViewController *bVC = [[penyouquanXiangQingViewController alloc]initWithDic:[self.benliBenArray objectAtIndex:indexPath.row]];
+        [self.navigationController pushViewController:bVC animated:YES];
+    }
 }
 
 #pragma mark - btnClick
@@ -197,14 +251,45 @@
 }
 
 -(void)addData{
-    pengyouqunFaBuViewController *pVC =[[pengyouqunFaBuViewController alloc]init];
-    [self.navigationController pushViewController:pVC animated:YES];
+    if (self.classId.length > 0) {
+        pengyouqunFaBuViewController *pVC =[[pengyouqunFaBuViewController alloc]initWithClassId:self.classId className:self.className];
+        [self.navigationController pushViewController:pVC animated:YES];
+    }
+    else{
+        pengyouqunFaBuViewController *pVC =[[pengyouqunFaBuViewController alloc]init];
+        [self.navigationController pushViewController:pVC animated:YES];
+    }
+    
 }
 
 #pragma mark - BinLiXiangQingCellDelegate
 -(void)pingLunBtnClickWithNumberIndexRow:(NSString *)numberIndexRow{
     self.currentIndexrow = numberIndexRow;
     [self showKeyboard];
+}
+
+-(void)yinPinBtnClickWithNumberIndexRow:(NSString *)numberIndexRow{
+    //    self.currentIndexrow = numberIndexRow;
+    //    [self showKeyboard];
+    AvaPlayer *player = [AvaPlayer sharedManager];
+    NSDictionary *dic = [self.benliBenArray objectAtIndex:[numberIndexRow integerValue]];
+    [player playWithUrl:[DictionaryStringTool stringFromDictionary:dic forKey:@"voiceUrl"]];
+}
+
+-(void)loveBtnClickWithNumberIndexRow:(NSString *)numberIndexRow{
+    self.currentIndexrow = numberIndexRow;
+    youErYuanNetWork *youE = [[youErYuanNetWork alloc]init];
+    NSDictionary *dict = [plistDataManager getDataWithKey:user_playformList];
+    NSDictionary *dic = [self.benliBenArray objectAtIndex:[self.currentIndexrow integerValue]];
+    NSDictionary *dicton = [DictionaryStringTool stringFromDictionary:dic forKey:@"replyList"];
+    
+    if (self.classId.length > 0) {
+        [youE praiseAndReplyWithClassId:self.classId semesterId:[DictionaryStringTool stringFromDictionary:dict forKey:@"semesterId"] platformId:[DictionaryStringTool stringFromDictionary:dict forKey:@"platformId"] parentId:[DictionaryStringTool stringFromDictionary:dicton forKey:@"parentId"] type:@"1" content:@""];
+    }
+    else{
+        [youE praiseAndReplyWithClassId:[DictionaryStringTool stringFromDictionary:dict forKey:@"classId"] semesterId:[DictionaryStringTool stringFromDictionary:dict forKey:@"semesterId"] platformId:[DictionaryStringTool stringFromDictionary:dict forKey:@"platformId"] parentId:[DictionaryStringTool stringFromDictionary:dicton forKey:@"parentId"] type:@"1" content:@""];
+    }
+    
 }
 
 #pragma mark - sendMessageDelegate
@@ -215,7 +300,14 @@
     message = [emojiStringChange emojiStringChange2:message];
     NSDictionary *dict = [plistDataManager getDataWithKey:user_playformList];
     NSDictionary *dic = [self.benliBenArray objectAtIndex:[self.currentIndexrow integerValue]];
-    [youE praiseAndReplyWithClassId:[DictionaryStringTool stringFromDictionary:dict forKey:@"classId"] semesterId:[DictionaryStringTool stringFromDictionary:dict forKey:@"semesterId"] platformId:[DictionaryStringTool stringFromDictionary:dict forKey:@"platformId"] parentId:[DictionaryStringTool stringFromDictionary:dic forKey:@"parentId"] type:@"2" content:message];
+    NSDictionary *dicton = [DictionaryStringTool stringFromDictionary:dic forKey:@"replyList"];
+    if (self.classId.length > 0) {
+        [youE praiseAndReplyWithClassId:self.classId semesterId:[DictionaryStringTool stringFromDictionary:dict forKey:@"semesterId"] platformId:[DictionaryStringTool stringFromDictionary:dict forKey:@"platformId"] parentId:[DictionaryStringTool stringFromDictionary:dicton forKey:@"parentId"] type:@"2" content:message];
+    }
+    else{
+        [youE praiseAndReplyWithClassId:[DictionaryStringTool stringFromDictionary:dict forKey:@"classId"] semesterId:[DictionaryStringTool stringFromDictionary:dict forKey:@"semesterId"] platformId:[DictionaryStringTool stringFromDictionary:dict forKey:@"platformId"] parentId:[DictionaryStringTool stringFromDictionary:dicton forKey:@"parentId"] type:@"2" content:message];
+    }
+    
 }
 
 -(void)removeFormParent{
@@ -251,17 +343,19 @@
 }
 
 #pragma mark - pullTableViewDelegate
-
-
 -(void)pullTableViewDidTriggerLoadMore:(PullTableView *)pullTableView{
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    self.currentPage ++;
+    [self getData];
 }
 
 
 -(void)pullTableViewDidTriggerRefresh:(PullTableView *)pullTableView{
     NSLog(@"hello");
     NSLog(@"%@",pullTableView);
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    self.currentPage = 0;
+    [self getData];
 }
 
 -(void)refreshListDataBack{

@@ -1,0 +1,35 @@
+//
+//  youErYuanNetWork.h
+//  LuckyBaby
+//
+//  Created by 黄嘉宏 on 15-4-6.
+//  Copyright (c) 2015年 黄嘉宏. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface youErYuanNetWork : NSObject
+//校验是否开通幼儿园服务
+-(void)withoutBindWithUserName:(NSString*)userName;
+
+//查询通知通告列表
+-(void)getPlatformInformsWithchildIdPlatform:(NSString*)childIdPlatform classId:(NSString*)classId platformId:(NSString*)platformId semesterId:(NSString*)semesterId page:(NSString*)page pageSize:(NSString*)pageSize;
+
+//查询当前班级信息（含学期）
+-(void)getFamilyAddressCoordinateWithChildIdPlatform:(NSString*)childIdPlatform;
+
+//查询家庭食物档案
+-(void)getMealSchedulePlatformWithClassId:(NSString*)classId semesterId:(NSString*)semesterId platformId:(NSString*)platformId dateStart:(NSString *)dateStart dateEnd:(NSString*)dateEnd;
+
+//查询学校周课表
+-(void)getCourseSchedulePlatformWeekWithClassId:(NSString*)classId semesterId:(NSString*)semesterId platformId:(NSString*)platformId;
+
+//查询通知通告详情
+-(void)getplatforminformDetailWithInfoId:(NSString*)infoId;
+
+//获取班级圈列表
+-(void)getCircleListWithClassId:(NSString*)classId semesterId:(NSString*)semesterId platformId:(NSString*)platformId page:(NSString*)page pageSize:(NSString*)pageSize;
+
+//点赞和回复
+-(void)praiseAndReplyWithClassId:(NSString*)classId semesterId:(NSString*)semesterId platformId:(NSString*)platformId parentId:(NSString*)parentId type:(NSString*)type content:(NSString*)content;
+@end

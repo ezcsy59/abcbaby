@@ -68,4 +68,13 @@
 
 //获取评价列表
 -(void)getScoreInfoWithClassId:(NSString*)classId semesterId:(NSString*)semesterId platformId:(NSString*)platformId childIdPlatform:(NSString*)childIdPlatform weekIndex:(NSString*)weekIndex;
+
+//幼儿园接送亲属查询
+-(void)listPickableRelativesWithChildIdPlatform:(NSString*)childIdPlatform;
+
+//幼儿园接送亲属保存
+-(void)savePickableRelativesWithType:(NSString*)type childIdPlatform:(NSString*)childIdPlatform relativesName:(NSString*)relativesName relationsName:(NSString*)relationsName relativesMobile:(NSString *)relativesMobile accompanyPhoto:(NSString *)accompanyPhoto recId:(NSString*)recId;
+
+//幼儿园接送亲属删除
+-(void)delPickableRelativesWithRecId:(NSString*)recId;
 @end

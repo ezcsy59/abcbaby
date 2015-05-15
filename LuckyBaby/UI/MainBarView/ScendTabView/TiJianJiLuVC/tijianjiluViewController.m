@@ -13,6 +13,8 @@
 @interface tijianjiluViewController ()<UITableViewDataSource,UITableViewDelegate>
 @property(nonatomic,strong)UITableView *_tableView;
 @property(nonatomic,strong)NSArray *tijianArray;
+
+@property(nonatomic,assign)NSInteger currentPage;
 @end
 
 @implementation tijianjiluViewController
@@ -40,6 +42,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    self.currentPage = 0;
     [self getData];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listHealthPlatformIndexSuccess:) name:@"listHealthPlatformIndexSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listHealthPlatformIndexListFail:) name:@"listHealthPlatformIndexListFail" object:nil];
@@ -53,7 +56,7 @@
     self.tijianArray = [NSArray array];
     jianKangNetWork *jianK = [[jianKangNetWork alloc]init];
     NSDictionary *dic = [plistDataManager getDataWithKey:user_loginList];
-    [jianK listHealthPlatformIndexWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] pageSize:@"10" page:@"0"];
+    [jianK listHealthPlatformIndexWithChildIdFamily:[DictionaryStringTool stringFromDictionary:dic forKey:@"childIdFamilyCurrent"] pageSize:@"10" page:[NSString stringWithFormat:@"%d",self.currentPage]];
 }
 
 #pragma mark -logic data

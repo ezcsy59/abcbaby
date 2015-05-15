@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>7E87C0AB-6D16-47F1-8A80-91C7BD8AC6A9</string>
+	<key>IDESourceControlProjectName</key>
+	<string>LuckyBaby</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>F5963C52BF008B7D5FB53440FC3329FDFF991F3C</key>
+		<string>https://github.com/ezcsy59/abcbaby.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>LuckyBaby.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>F5963C52BF008B7D5FB53440FC3329FDFF991F3C</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/ezcsy59/abcbaby.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>F5963C52BF008B7D5FB53440FC3329FDFF991F3C</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F5963C52BF008B7D5FB53440FC3329FDFF991F3C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>LuckyBabyForSVN</string>
+		</dict>
+	</array>
+</dict>
+</plist>

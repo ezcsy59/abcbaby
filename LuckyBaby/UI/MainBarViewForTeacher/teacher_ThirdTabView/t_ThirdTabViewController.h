@@ -7,5 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "class_phoneViewController.h"
 @interface t_ThirdTabViewController : UIViewController
 @end

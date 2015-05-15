@@ -13,6 +13,7 @@
 
 -(void)pingLunBtnClickWithNumberIndexRow:(NSString*)numberIndexRow;
 
+-(void)yinPinBtnClickWithNumberIndexRow:(NSString*)numberIndexRow;
 @end
 
 @interface DaShiJianTableViewCell : UITableViewCell

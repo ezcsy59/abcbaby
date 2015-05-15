@@ -22,9 +22,18 @@
 @property(nonatomic,assign)BOOL canHide;
 @property(nonatomic,strong)KGTipView *tipView;
 @property(nonatomic,strong)HJHMyImageView *textImageView;
+
+@property(nonatomic,assign)int style;
 @end
 
 @implementation xigaiMimaViewController
+
+-(instancetype)initWithStyle:(int)style{
+    if (self = [super init]) {
+        self.style = style;
+    }
+    return self;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -59,6 +68,10 @@
     
     self.headNavView.titleLabel.text = @"修改密码";
     self.view.backgroundColor = [UIColor colorWithHexString:@"#F1F1F1"];
+    
+    if (self.style == 1) {
+        self.headNavView.backgroundColor = [UIColor colorWithHexString:@"#7FC369"];
+    }
     
     [self addLeftReturnBtn];
     [self.leftBtn setTitle:@"返回" forState:UIControlStateNormal];

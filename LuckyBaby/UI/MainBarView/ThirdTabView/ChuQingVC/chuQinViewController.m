@@ -15,6 +15,7 @@
 #import "addQinJiaViewController.h"
 #import "addZhongDianGuanChaViewController.h"
 #import "addWeiTuoChiYaoViewController.h"
+#import "JieSongViewController.h"
 
 @interface chuQinViewController ()<KGSelectViewDelegate>
 @property(nonatomic,strong)KGSelectView *SView;
@@ -249,7 +250,8 @@
 #pragma mark - KGSelectViewDelegate
 -(void)selectBtnClick:(int)tag{
     if (tag == 0) {
-        
+        JieSongViewController *jVC = [[JieSongViewController alloc]init];
+        [self.navigationController pushViewController:jVC animated:YES];
     }
     else if (tag == 1){
         addQinJiaViewController *aVC = [[addQinJiaViewController alloc]init];

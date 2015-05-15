@@ -16,13 +16,16 @@
 #import "BanjiQuanViewController.h"
 #import "BanjiQunViewController.h"
 #import "showWebViewController2.h"
+#import "banJi_xiangCeViewController.h"
 
 @interface ThirdTabViewController ()
 @property(nonatomic,strong)EGORefreshTableHeaderView *_refreshHeaderView;
 @property(nonatomic,strong)PullTableView *_tableView;
 @property(nonatomic,strong)HJHMyImageView *mainImageView;
-@property(nonatomic,strong)NSArray *tongGaoArray;
+@property(nonatomic,strong)NSMutableArray *tongGaoArray;
 @property(nonatomic,strong)HJHMyImageView *mengCengBgImageView;
+
+@property(nonatomic,assign)NSInteger currentPage;
 @end
 
 @implementation ThirdTabViewController
@@ -39,7 +42,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.tongGaoArray = [NSArray array];
+    self.tongGaoArray = [NSMutableArray array];
     [self setMainImageView];
     [self setMainTableView];
     [self setMengCengBgImageView];
@@ -47,6 +50,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    self.currentPage = 0;
     [self getData];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(withoutBindSuccess:) name:@"withoutBindSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(withoutBindFail:) name:@"withoutBindFail" object:nil];
@@ -69,8 +73,14 @@
 -(void)withoutBindSuccess:(NSNotification*)noti{
     youErYuanNetWork *youErYuanNetWork1 = [[youErYuanNetWork alloc]init];
     NSDictionary *dic = [plistDataManager getDataWithKey:user_playformList];
-    [youErYuanNetWork1 getPlatformInformsWithchildIdPlatform:[DictionaryStringTool stringFromDictionary:dic forKey:@"childId"] classId:[DictionaryStringTool stringFromDictionary:dic forKey:@"classId"] platformId:[DictionaryStringTool stringFromDictionary:dic forKey:@"platformId"] semesterId:[DictionaryStringTool stringFromDictionary:dic forKey:@"semesterId"] page:@"0" pageSize:@"10"];
+    [youErYuanNetWork1 getPlatformInformsWithchildIdPlatform:[DictionaryStringTool stringFromDictionary:dic forKey:@"childId"] classId:[DictionaryStringTool stringFromDictionary:dic forKey:@"classId"] platformId:[DictionaryStringTool stringFromDictionary:dic forKey:@"platformId"] semesterId:[DictionaryStringTool stringFromDictionary:dic forKey:@"semesterId"] page:[NSString stringWithFormat:@"%d",self.currentPage] pageSize:@"10"];
     self.mengCengBgImageView.userInteractionEnabled = NO;
+    
+    
+    //重设图片
+    [self.mainImageView setImageWithURL:[NSURL URLWithString:[DictionaryStringTool stringFromDictionary:dic forKey:@"childPortraitUrl"]] placeholderImage:[UIImage imageNamed:@"mybaby_top_bg.png"]];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"changeClassName" object:[DictionaryStringTool stringFromDictionary:dic forKey:@"className"]];
 }
 
 -(void)withoutBindFail:(NSNotification*)noti{
@@ -81,13 +91,31 @@
     NSDictionary *dic = [noti object];
     NSArray *array = [DictionaryStringTool stringFromDictionary:dic forKey:@"data"];
     if ([array isKindOfClass:[NSArray class]]) {
-        self.tongGaoArray = array;
+        if (self.currentPage == 0) {
+            self.tongGaoArray = [[NSMutableArray alloc]initWithArray:array];
+        }
+        else{
+            for (NSDictionary *dic in array) {
+                [self.tongGaoArray addObject:dic];
+            }
+        }
+    }
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
     }
     [self._tableView reloadData];
 }
 
 -(void)getPlatformInformsFail:(NSNotification*)noti{
-    
+    if(self.currentPage == 0){
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    }
+    else{
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    }
 }
 
 -(void)setMainTableView{
@@ -142,12 +170,15 @@
             {
                 HJHMyImageView *btnImageView = [[HJHMyImageView alloc]init];
                 btnImageView.userInteractionEnabled = NO;
-                btnImageView.image = [UIImage imageNamed:@"class_group.png"];
+//                btnImageView.image = [UIImage imageNamed:@"class_group.png"];
+                btnImageView.image = [UIImage imageNamed:@"teach_photo_icon"];
+                
                 btnImageView.contentMode = UIViewContentModeScaleAspectFit;
                 btnImageView.frame = CGRectMake(0, 5, 53.3, 35);
                 [btn addSubview:btnImageView];
                 
-                label.text = @"班级群";
+//                label.text = @"班级群";
+                label.text = @"相册";
             }
                 break;
             case 2:
@@ -222,6 +253,7 @@
 }
 
 -(void)thirdViewBtnClick:(HJHMyButton*)btn{
+    NSDictionary *dic = [plistDataManager getDataWithKey:user_playformList];
     switch (btn.tag) {
         case 0:
         {
@@ -231,8 +263,11 @@
             break;
         case 1:
         {
-            BanjiQunViewController *qinB = [[BanjiQunViewController alloc]init];
+//            BanjiQunViewController *qinB = [[BanjiQunViewController alloc]init];
+//            [self.navigationController pushViewController:qinB animated:YES];
+            banJi_xiangCeViewController *qinB = [[banJi_xiangCeViewController alloc]initWithClassId:[DictionaryStringTool stringFromDictionary:dic forKey:@"classId"] className:[DictionaryStringTool stringFromDictionary:dic forKey:@"className"] style:0];
             [self.navigationController pushViewController:qinB animated:YES];
+            
         }
             break;
         case 2:
@@ -315,17 +350,19 @@
 }
 
 #pragma mark - pullTableViewDelegate
-
-
 -(void)pullTableViewDidTriggerLoadMore:(PullTableView *)pullTableView{
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadMoreListDataBack) userInfo:nil repeats:NO];
+    self.currentPage ++;
+    [self getData];
 }
 
 
 -(void)pullTableViewDidTriggerRefresh:(PullTableView *)pullTableView{
     NSLog(@"hello");
     NSLog(@"%@",pullTableView);
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    //    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(refreshListDataBack) userInfo:nil repeats:NO];
+    self.currentPage = 0;
+    [self getData];
 }
 
 -(void)refreshListDataBack{

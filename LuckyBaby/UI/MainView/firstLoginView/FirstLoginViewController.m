@@ -32,24 +32,24 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    NSUserDefaults *userDf = [NSUserDefaults standardUserDefaults];
-//    NSString *bundleVersion = [userDf objectForKey:@"BundleVersion"];
-//    NSLog(@"%@",[[NSBundle mainBundle]infoDictionary]);
-//    NSString *plistBundleV = [[[NSBundle mainBundle]infoDictionary]objectForKey:@"CFBundleVersion"];
-//    if (!bundleVersion) {
-//        [userDf setObject:plistBundleV forKey:@"BundleVersion"];
-//        [userDf synchronize];
-//        NSLog(@"%@",[userDf objectForKey:@"BundleVersion"]);
-//        self.bundleVersion = @"0";
-//    }else{
-//        self.bundleVersion = bundleVersion;
-//    }
-//    if (([self.bundleVersion intValue] < [plistBundleV intValue]) || [self.bundleVersion intValue] == 0) {
-//        [self setMainView];
-//        [self setPageControl];
-//    }else{
+    NSUserDefaults *userDf = [NSUserDefaults standardUserDefaults];
+    NSString *bundleVersion = [userDf objectForKey:@"BundleVersion"];
+    NSLog(@"%@",[[NSBundle mainBundle]infoDictionary]);
+    NSString *plistBundleV = [[[NSBundle mainBundle]infoDictionary]objectForKey:@"CFBundleVersion"];
+    if (!bundleVersion) {
+        [userDf setObject:plistBundleV forKey:@"BundleVersion"];
+        [userDf synchronize];
+        NSLog(@"%@",[userDf objectForKey:@"BundleVersion"]);
+        self.bundleVersion = @"0";
+    }else{
+        self.bundleVersion = bundleVersion;
+    }
+    if (([self.bundleVersion intValue] < [plistBundleV intValue]) || [self.bundleVersion intValue] == 0) {
+        [self setMainView];
+        [self setPageControl];
+    }else{
         [self login];
-//    }
+    }
 	// Do any additional setup after loading the view.
 }
 
@@ -65,6 +65,15 @@
     for (int i = 0; i < 3; i++) {
         //添加每一页的imageView
         HJHMyImageView *imageView = [[HJHMyImageView alloc]initWithFrame:CGRectMake(i*ScreenWidth, ScreenOriginY, ScreenWidth, ScreenHeigth)];
+       if(i==0)
+       {
+         imageView.image = [UIImage imageNamed:@"111.png"];
+       }       else if(i == 1)
+        {
+           imageView.image = [UIImage imageNamed:@"222.png"];
+        }else{
+            imageView.image = [UIImage imageNamed:@"333.png"];
+        }
         [newView addSubview:imageView];
         if(i == 2){
             HJHMyButton *loginBtn = [[HJHMyButton alloc]initWithFrame:CGRectMake(ScreenWidth/2 - 50 , ScreenHeigth - 100, 100, 40)];
@@ -81,7 +90,7 @@
 
 -(void)setPageControl{
     self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(ScreenWidth/2 - 30 , ScreenHeigth - 50, 60, 20)];
-    self.pageControl.backgroundColor = [UIColor lightGrayColor];
+    self.pageControl.backgroundColor = [UIColor clearColor];
     self.pageControl.numberOfPages = 3;
     self.pageControl.currentPage = 0;
     [self.view addSubview:self.pageControl];

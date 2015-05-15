@@ -97,7 +97,6 @@
     for (UIView *view in cell.subviews) {
         [view removeFromSuperview];
     }
-    
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; 
     HJHMyLabel *nameLabel = [[HJHMyLabel alloc]init];
     NSDictionary *dic = [self.dituListArray objectAtIndex:indexPath.row];

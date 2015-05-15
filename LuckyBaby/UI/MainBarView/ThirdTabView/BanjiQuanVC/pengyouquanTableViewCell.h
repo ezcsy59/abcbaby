@@ -11,6 +11,7 @@
 @protocol pengyouquanTableViewCell <NSObject>
 
 -(void)pingLunBtnClickWithNumberIndexRow:(NSString*)numberIndexRow;
+-(void)loveBtnClickWithNumberIndexRow:(NSString*)numberIndexRow;
 
 @end
 

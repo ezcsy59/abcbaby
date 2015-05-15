@@ -30,6 +30,8 @@
 @property(retain,nonatomic)NSMutableArray* groupData;
 @property(strong,nonatomic)NSString *ablumName;
 @property(weak,nonatomic)id<VediogetPhotoViewDelegate> delegate2;
+
+@property(nonatomic,assign)int sendPhotoStyle;
 //支持单张图片和多张图片选取（0为单张选取，1为多张选取）
 -(id)initWithStyle:(NSInteger)style;
 //公开的返回方法
