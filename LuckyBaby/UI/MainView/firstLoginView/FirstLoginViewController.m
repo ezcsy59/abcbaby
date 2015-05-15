@@ -59,7 +59,7 @@
     newView.delegate = self;
     newView.showsHorizontalScrollIndicator = NO;
     newView.showsVerticalScrollIndicator = NO;
-    newView.backgroundColor = [UIColor yellowColor];
+    newView.backgroundColor = [UIColor clearColor];
     newView.pagingEnabled = YES;
     [self.view addSubview:newView];
     for (int i = 0; i < 3; i++) {
@@ -67,29 +67,29 @@
         HJHMyImageView *imageView = [[HJHMyImageView alloc]initWithFrame:CGRectMake(i*ScreenWidth, ScreenOriginY, ScreenWidth, ScreenHeigth)];
        if(i==0)
        {
-         imageView.image = [UIImage imageNamed:@"111.png"];
+         imageView.image = [UIImage imageNamed:@"222.png"];
        }       else if(i == 1)
         {
-           imageView.image = [UIImage imageNamed:@"222.png"];
+           imageView.image = [UIImage imageNamed:@"333.png"];
         }else{
-            imageView.image = [UIImage imageNamed:@"333.png"];
+            imageView.image = [UIImage imageNamed:@"111.png"];
         }
         [newView addSubview:imageView];
         if(i == 2){
-            HJHMyButton *loginBtn = [[HJHMyButton alloc]initWithFrame:CGRectMake(ScreenWidth/2 - 50 , ScreenHeigth - 100, 100, 40)];
-            loginBtn.backgroundColor = [UIColor redColor];
-            [loginBtn setTitle:@"点击进入" forState:UIControlStateNormal];
+            HJHMyButton *loginBtn = [[HJHMyButton alloc]initWithFrame:CGRectMake(ScreenWidth/2 - 50 , ScreenHeigth - 70, 150, 40)];
+            loginBtn.backgroundColor = [UIColor clearColor];
+            [loginBtn setTitle:@"" forState:UIControlStateNormal];
             loginBtn.titleLabel.font = [UIFont systemFontOfSize:17];
             [loginBtn addTarget:self action:@selector(login) forControlEvents:UIControlEventTouchUpInside];
             [imageView addSubview:loginBtn];
         }
     }
     
-    self.view.backgroundColor = [UIColor blueColor];
+    self.view.backgroundColor = [UIColor clearColor];
 }
 
 -(void)setPageControl{
-    self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(ScreenWidth/2 - 30 , ScreenHeigth - 50, 60, 20)];
+    self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(ScreenWidth/2 -20 , ScreenHeigth - 30, 60, 20)];
     self.pageControl.backgroundColor = [UIColor clearColor];
     self.pageControl.numberOfPages = 3;
     self.pageControl.currentPage = 0;

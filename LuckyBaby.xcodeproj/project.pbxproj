@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		48C41EBE777D4FA49BE4D4DE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 947422D44331E4307D8F4B49 /* libPods.a */; };
-		656F66031B04E7F000C3433B /* 111.png in Resources */ = {isa = PBXBuildFile; fileRef = 656F66001B04E7F000C3433B /* 111.png */; };
+		65283EE91B05A283008C41D9 /* 111.png in Resources */ = {isa = PBXBuildFile; fileRef = 65283EE81B05A283008C41D9 /* 111.png */; };
 		656F66041B04E7F000C3433B /* 222.png in Resources */ = {isa = PBXBuildFile; fileRef = 656F66011B04E7F000C3433B /* 222.png */; };
 		656F66051B04E7F000C3433B /* 333.png in Resources */ = {isa = PBXBuildFile; fileRef = 656F66021B04E7F000C3433B /* 333.png */; };
 		82138CE91AC7DDFD00E75B78 /* LoginNetWork.m in Sources */ = {isa = PBXBuildFile; fileRef = 82138CE81AC7DDFD00E75B78 /* LoginNetWork.m */; };
@@ -654,7 +654,7 @@
 
 /* Begin PBXFileReference section */
 		3F684448981A614CEBC5042C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		656F66001B04E7F000C3433B /* 111.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 111.png; sourceTree = "<group>"; };
+		65283EE81B05A283008C41D9 /* 111.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 111.png; sourceTree = "<group>"; };
 		656F66011B04E7F000C3433B /* 222.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 222.png; sourceTree = "<group>"; };
 		656F66021B04E7F000C3433B /* 333.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 333.png; sourceTree = "<group>"; };
 		82138CE71AC7DDFD00E75B78 /* LoginNetWork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginNetWork.h; sourceTree = "<group>"; };
@@ -3485,7 +3485,7 @@
 		82DA69861AC79B69005654E9 /* firstView */ = {
 			isa = PBXGroup;
 			children = (
-				656F66001B04E7F000C3433B /* 111.png */,
+				65283EE81B05A283008C41D9 /* 111.png */,
 				656F66011B04E7F000C3433B /* 222.png */,
 				656F66021B04E7F000C3433B /* 333.png */,
 				82DA69871AC79B69005654E9 /* children_helper_img.png */,
@@ -3897,7 +3897,6 @@
 				82BA94F81AD6671300C85A52 /* [p58].png in Resources */,
 				82DA69E81AC79B69005654E9 /* fooder_mybaby_icon_down_n@3x.png in Resources */,
 				82B8278F1ADC0628008391CF /* ic_ft_saysome.png in Resources */,
-				656F66031B04E7F000C3433B /* 111.png in Resources */,
 				82BA94F61AD6671300C85A52 /* [p56].png in Resources */,
 				82CBF1261AF8FAD4000DF86E /* teach_month_icon.png in Resources */,
 				82BC08B91AC96CF100FBDB29 /* blackArrow@2x.png in Resources */,
@@ -4009,6 +4008,7 @@
 				82DA69FE1AC79B69005654E9 /* health_record_img.png in Resources */,
 				82DA69E21AC79B69005654E9 /* fooder_health_icon_down_n@3x.png in Resources */,
 				82DA69D81AC79B69005654E9 /* video_record.png in Resources */,
+				65283EE91B05A283008C41D9 /* 111.png in Resources */,
 				82DA6A171AC79B69005654E9 /* talk_002.9.png in Resources */,
 				82BA943E1AD6634500C85A52 /* keyboard_del_pressed.png in Resources */,
 				82BA95061AD6671300C85A52 /* [p70].png in Resources */,
