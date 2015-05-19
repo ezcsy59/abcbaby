@@ -4,7 +4,7 @@
 //
 //  Created by AA on 14-1-9.
 //  Copyright (c) 2014年 huang. All rights reserved.
-//
+//  字典解析类
 
 #import <Foundation/Foundation.h>
 

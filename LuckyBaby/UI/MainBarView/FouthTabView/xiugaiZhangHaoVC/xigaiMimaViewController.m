@@ -131,7 +131,7 @@
     label3.text = @"旧密码 :";
     [self.textImageView addSubview:label3];
     
-    self.passWordField = [[HJHMyTextField alloc]initWithFrame:CGRectMake(90, 1 + 50, 200, 48) andFromRight:10];
+    self.passWordField = [[HJHMyTextField alloc]initWithFrame:CGRectMake(90, 1 , 200, 48) andFromRight:10];
     self.passWordField.font = [UIFont systemFontOfSize:16];
     self.passWordField.placeholder = @"请输入密码（至少6位）";
     [self.textImageView addSubview:self.passWordField];

@@ -9,7 +9,7 @@
 #import "PlayNavView.h"
 
 @implementation PlayNavView
-@synthesize titleLabel;
+@synthesize titleLabel,line;
 
 -(id)init
 {
@@ -38,9 +38,9 @@
             
             
             //给nav设置一个顶部图片
-            HJHMyImageView *bgImg = [[HJHMyImageView alloc]initWithFrame:self.bounds];
-            [bgImg setBackgroundColor:[UIColor clearColor]];
-            [bgImg setImage:[UIImage imageNamed:@"top_bar.png"]];
+            HJHMyImageView *bgImg = [[HJHMyImageView alloc]initWithFrame:CGRectMake(0, self.frame.size.height-1, ScreenWidth, 1)];
+            [bgImg setBackgroundColor:[UIColor lightGrayColor]];
+       //     [bgImg setImage:[UIImage imageNamed:@"top_bar.png"]];
             [self addSubview:bgImg];
             [self initView];
         }

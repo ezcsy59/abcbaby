@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		48C41EBE777D4FA49BE4D4DE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 947422D44331E4307D8F4B49 /* libPods.a */; };
 		65283EE91B05A283008C41D9 /* 111.png in Resources */ = {isa = PBXBuildFile; fileRef = 65283EE81B05A283008C41D9 /* 111.png */; };
+		65283EED1B05E3A6008C41D9 /* head.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 65283EEC1B05E3A6008C41D9 /* head.jpg */; };
 		656F66041B04E7F000C3433B /* 222.png in Resources */ = {isa = PBXBuildFile; fileRef = 656F66011B04E7F000C3433B /* 222.png */; };
 		656F66051B04E7F000C3433B /* 333.png in Resources */ = {isa = PBXBuildFile; fileRef = 656F66021B04E7F000C3433B /* 333.png */; };
 		82138CE91AC7DDFD00E75B78 /* LoginNetWork.m in Sources */ = {isa = PBXBuildFile; fileRef = 82138CE81AC7DDFD00E75B78 /* LoginNetWork.m */; };
@@ -655,6 +656,7 @@
 /* Begin PBXFileReference section */
 		3F684448981A614CEBC5042C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		65283EE81B05A283008C41D9 /* 111.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 111.png; sourceTree = "<group>"; };
+		65283EEC1B05E3A6008C41D9 /* head.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = head.jpg; sourceTree = "<group>"; };
 		656F66011B04E7F000C3433B /* 222.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 222.png; sourceTree = "<group>"; };
 		656F66021B04E7F000C3433B /* 333.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 333.png; sourceTree = "<group>"; };
 		82138CE71AC7DDFD00E75B78 /* LoginNetWork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginNetWork.h; sourceTree = "<group>"; };
@@ -3387,6 +3389,7 @@
 				82DA69441AC79B69005654E9 /* chat_func_voice.png */,
 				82DA69451AC79B69005654E9 /* del1.png */,
 				82DA69461AC79B69005654E9 /* delete1.png */,
+				65283EEC1B05E3A6008C41D9 /* head.jpg */,
 				82DA69471AC79B69005654E9 /* edit1.png */,
 				82DA69481AC79B69005654E9 /* emotion.png */,
 				82DA69491AC79B69005654E9 /* firsttime.png */,
@@ -3861,6 +3864,7 @@
 				82BA94F91AD6671300C85A52 /* [p59].png in Resources */,
 				82DA69F31AC79B69005654E9 /* add_f.png in Resources */,
 				82BA943D1AD6634500C85A52 /* keyboard_del@2x.png in Resources */,
+				65283EED1B05E3A6008C41D9 /* head.jpg in Resources */,
 				82DA69EB1AC79B69005654E9 /* chuqin_001_n.png in Resources */,
 				82B8279C1ADC0628008391CF /* ic_ft_wrestling.png in Resources */,
 				82DA69C91AC79B69005654E9 /* [p1002].png in Resources */,

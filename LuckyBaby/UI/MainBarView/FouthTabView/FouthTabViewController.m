@@ -68,17 +68,18 @@
     [self._tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self._tableView.frame = CGRectMake(0, -15, ScreenWidth, 568 - 198 + 88);
     if (!iPhone5) {
-        self._tableView.frame = CGRectMake(0, -5, ScreenWidth, 568 - 198 + 78 - 88);
+        self._tableView.frame = CGRectMake(0, 0, ScreenWidth, 568 - 198 + 78 - 88);
     }
     self._tableView.delegate = self;
     self._tableView.dataSource = self;
     [self._tableView setContentSize:CGSizeMake(ScreenWidth, 568 - 198 + 95)];
     [self.view addSubview:self._tableView];
     
-    self._tableView.bounces = NO;
+    self._tableView.bounces = YES;
     self._tableView.showsHorizontalScrollIndicator = NO;
     self._tableView.showsVerticalScrollIndicator = NO;
     
+    ///用户头像设为头
     HJHMyImageView *headerImagView = [[HJHMyImageView alloc]init];
     headerImagView.image = [UIImage imageNamed:@"user_bj.png"];
     headerImagView.contentMode = UIViewContentModeScaleToFill;
@@ -99,7 +100,7 @@
     headerBtn.layer.borderColor = [UIColor whiteColor].CGColor;
     headerBtn.layer.borderWidth = 2;
     headerBtn.userInteractionEnabled = NO;
-    [headerBtn setImageWithURL:[NSURL URLWithString:[DictionaryStringTool stringFromDictionary:dic forKey:@"portraitUrl"]] placeholderImage:[UIImage imageNamed:@"ic_picture_loadfailed"]];
+    [headerBtn setImageWithURL:[NSURL URLWithString:[DictionaryStringTool stringFromDictionary:dic forKey:@"portraitUrl"]] placeholderImage:[UIImage imageNamed:@"head.jpg"]];
     [headerImagView addSubview:headerBtn];
     
     
@@ -274,22 +275,22 @@
 }
 
 #pragma mark - tipview delegate
-- (void)KGTipVIew:(KGTipView *)tipView buttonOfIndex:(NSInteger)index userInfo:(id)userInfo
-{
-    [_tipView stopLoadingAnimationWithTitle:nil context:nil duration:0];
-    if(index == 1){
-        //登录中的提示
-        RootViewController* root = (RootViewController*)getCurrentRootController;
-        [root deleteMainView];
-        [root addLoginView];
-        
-        NSDictionary *dic = [plistDataManager getDataWithKey:user_loginList];
-        //改plist的值childIdFamily和childNicknameFamily
-        NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithDictionary:dic];
-        [dict setObject:@"" forKey:@"userId"];
-        NSMutableDictionary *dictData = [NSMutableDictionary dictionary];
-        [dictData setObject:dict forKey:@"data"];
-        [plistDataManager writeData:dictData withKey:user_loginList];
-    }
-}
+//- (void)KGTipVIew:(KGTipView *)tipView buttonOfIndex:(NSInteger)index userInfo:(id)userInfo
+//{
+//    [_tipView stopLoadingAnimationWithTitle:nil context:nil duration:0];
+//    if(index == 1){
+//        //登录中的提示
+//        RootViewController* root = (RootViewController*)getCurrentRootController;
+//        [root deleteMainView];
+//        [root addLoginView];
+//        
+//        NSDictionary *dic = [plistDataManager getDataWithKey:user_loginList];
+//        //改plist的值childIdFamily和childNicknameFamily
+//        NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithDictionary:dic];
+//        [dict setObject:@"" forKey:@"userId"];
+//        NSMutableDictionary *dictData = [NSMutableDictionary dictionary];
+//        [dictData setObject:dict forKey:@"data"];
+//        [plistDataManager writeData:dictData withKey:user_loginList];
+//    }
+//}
 @end

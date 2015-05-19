@@ -12,6 +12,9 @@
 }
 
 @property (nonatomic,strong) UILabel *titleLabel;
+@property (nonatomic,strong) HJHMyImageView *line;
+
+
 
 -(id)init;
 
